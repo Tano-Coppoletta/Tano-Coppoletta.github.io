@@ -35,6 +35,9 @@ jobs:
       run: npm ci
 
     - name: Build
+      env:
+        PUBLIC_DOMAIN: gaetano-coppoletta.github.io
+        PUBLIC_REPO_NAME: Tano-Coppoletta.github.io
       run: npm run build
 
     - name: Upload build artifacts

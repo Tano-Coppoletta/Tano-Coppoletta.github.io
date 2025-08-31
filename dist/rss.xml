@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gaetano Coppoletta - Personal Website</title>
+    <description>Computer Science Graduate & Security Researcher focused on OCPP security and vulnerability research.</description>
+    <link>https://tano-coppoletta.github.io/Tano-Coppoletta.github.io/</link>
+    <atom:link href="https://tano-coppoletta.github.io/Tano-Coppoletta.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+    <language>en-us</language>
+    <item>
+      <title>OCPPStorm: A Comprehensive Fuzzing Tool for OCPP Implementations</title>
+      <description>Research paper presented at Network and Distributed System Security (VehicleSec) 2024 - NDSS Symposium</description>
+      <link>https://www.ndss-symposium.org/wp-content/uploads/vehiclesec2024-69-paper.pdf</link>
+      <pubDate>Thu, 01 Feb 2024 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Graduate Hourly Position at UIC</title>
+      <description>Developed OCPPStorm fuzzing tool, discovered 6 critical vulnerabilities resulting in 6 CVEs</description>
+      <link>https://tano-coppoletta.github.io/Tano-Coppoletta.github.io/about/</link>
+      <pubDate>Thu, 01 Jun 2023 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Research Assistant at UIC</title>
+      <description>Worked on web security research, CVE replication, and vulnerability detection tools</description>
+      <link>https://tano-coppoletta.github.io/Tano-Coppoletta.github.io/about/</link>
+      <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

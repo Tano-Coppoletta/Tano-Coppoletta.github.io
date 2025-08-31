@@ -1,0 +1,95 @@
+---
+export interface Props {
+  lines: string[];
+  prefix?: string;
+  loop?: boolean;
+}
+
+const { lines, prefix = '$', loop = true } = Astro.props;
+---
+
+<div class="terminal">
+  <div class="typewriter-container">
+    <span class="text-accent">{prefix} </span>
+    <span class="typewriter-text"></span>
+    <span class="cursor"></span>
+  </div>
+</div>
+
+<style>
+  .typewriter-container {
+    display: flex;
+    align-items: center;
+    min-height: 1.5em;
+  }
+  
+  .typewriter-text {
+    color: var(--text);
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  
+  .cursor {
+    display: inline-block;
+    width: 0.5em;
+    height: 1.2em;
+    background: var(--accent);
+    margin-left: 2px;
+    animation: caret 1s steps(1, end) infinite;
+  }
+  
+  @keyframes caret {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .cursor {
+      animation: none;
+    }
+  }
+</style>
+
+<script define:vars={{ lines }}>
+  // Initialize typewriter effect
+  document.addEventListener('DOMContentLoaded', () => {
+    const typewriterElements = document.querySelectorAll('.typewriter-text');
+    typewriterElements.forEach((element) => {
+      let currentLineIndex = 0;
+      let currentCharIndex = 0;
+      let isDeleting = false;
+      const speed = 80;
+      const deleteSpeed = 40;
+      
+      function type() {
+        const currentLine = lines[currentLineIndex];
+        
+        if (isDeleting) {
+          currentCharIndex--;
+          element.textContent = currentLine.substring(0, currentCharIndex);
+          
+          if (currentCharIndex === 0) {
+            isDeleting = false;
+            currentLineIndex = (currentLineIndex + 1) % lines.length;
+            setTimeout(type, 1000);
+            return;
+          }
+        } else {
+          currentCharIndex++;
+          element.textContent = currentLine.substring(0, currentCharIndex);
+          
+          if (currentCharIndex === currentLine.length) {
+            setTimeout(() => {
+              isDeleting = true;
+              type();
+            }, 2000);
+            return;
+          }
+        }
+        
+        setTimeout(type, isDeleting ? deleteSpeed : speed);
+      }
+      
+      type();
+    });
+  });
+</script>

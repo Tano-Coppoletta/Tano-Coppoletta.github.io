@@ -1,0 +1,238 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Card from '../components/Card.astro';
+import SkillBadge from '../components/SkillBadge.astro';
+import Terminal from '../components/Terminal.astro';
+---
+
+<Layout title="About - Gaetano Coppoletta" description="About Gaetano Coppoletta — Software Developer in cybersecurity.">
+  <!-- About Section -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <SectionHeading 
+            eyebrow="About Me"
+            title="Software Developer & Security Researcher"
+          />
+          <div class="space-y-6">
+            <p>
+              Hi, I'm Gaetano Coppoletta.
+            </p>
+            <p>
+              I was born and raised in Sicily, and today I work as a Software Developer in Silicon Valley. My passion lies in cybersecurity; I design and build tools that help organizations stay ahead of vulnerabilities and protect products at scale.
+            </p>
+            <p>
+              My journey took me from a small town in Southern Italy, to studying computer engineering at the Politecnico di Torino, then completing a dual degree at the University of Illinois at Chicago with a focus on cybersecurity. Along the way I worked in Italy, Norway, and the United States, building both technical skills and a global perspective.
+            </p>
+            <p>
+              Outside of work, I care deeply about technology, security, and the process of turning ideas into products. My story is about resilience, continuous learning, and building systems that people can trust.
+            </p>
+          </div>
+        </div>
+        
+        <div class="space-y-6">
+          <Card>
+            <h3 class="text-accent mb-4">Key Facts</h3>
+            <div class="space-y-3">
+              <div>
+                <div class="text-muted text-sm">Location</div>
+                <div>San Francisco, CA</div>
+              </div>
+              <div>
+                <div class="text-muted text-sm">Current Role</div>
+                <div>Software Developer, Global Product Security</div>
+              </div>
+              <div>
+                <div class="text-muted text-sm">Interests</div>
+                <div>Cybersecurity, Security Automation, Vulnerability Intelligence</div>
+              </div>
+            </div>
+          </Card>
+          
+          <Card>
+            <h3 class="text-accent mb-4">Skills</h3>
+            <div class="flex flex-wrap gap-2">
+              <SkillBadge skill="Python" />
+              <SkillBadge skill="JavaScript/TypeScript" />
+              <SkillBadge skill="Node.js" />
+              <SkillBadge skill="Java" />
+              <SkillBadge skill="SQL" />
+              <SkillBadge skill="React" />
+              <SkillBadge skill="Next.js" />
+              <SkillBadge skill="Astro" />
+              <SkillBadge skill="REST APIs" />
+              <SkillBadge skill="Cloud-native apps" />
+              <SkillBadge skill="Vulnerability Management" />
+              <SkillBadge skill="Threat Modeling" />
+              <SkillBadge skill="Secure SDLC" />
+              <SkillBadge skill="Fuzzing" />
+              <SkillBadge skill="Penetration Testing" />
+              <SkillBadge skill="CVE/CVSS Analysis" />
+              <SkillBadge skill="AI for Security" />
+              <SkillBadge skill="Git" />
+              <SkillBadge skill="Docker" />
+              <SkillBadge skill="Kubernetes" />
+              <SkillBadge skill="Linux" />
+              <SkillBadge skill="CI/CD" />
+              <SkillBadge skill="Oracle Cloud Infrastructure" />
+              <SkillBadge skill="AWS" />
+              <SkillBadge skill="GCP" />
+              <SkillBadge skill="Automation scripting" />
+              <SkillBadge skill="Data visualization" />
+              <SkillBadge skill="Agile development" />
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Terminal Strip -->
+  <section class="section bg-surface border-y border-stroke">
+    <div class="container">
+      <Terminal 
+        lines={[
+          'cat about.txt',
+          'echo "Education: Politecnico di Torino + UIC"',
+          'echo "Current: Oracle Global Product Security"',
+          'ls -la ~/experience/'
+        ]}
+        prefix="$"
+        loop={true}
+      />
+    </div>
+  </section>
+
+  <!-- Experience Timeline -->
+  <section class="section border-y border-stroke">
+    <div class="container">
+      <SectionHeading 
+        eyebrow="Experience"
+        title="Professional Journey"
+        subtitle="My work experience and research contributions"
+      />
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <Card>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-accent">Software Developer, Global Product Security</h3>
+              <span class="text-muted text-sm">Feb 2025 - Current</span>
+            </div>
+            <div class="text-muted mb-3">Oracle</div>
+            <ul class="space-y-2 text-sm list-disc list-inside">
+              <li>Develop and maintain security automation and vulnerability management tools used across the organization.</li>
+              <li>Designed and deployed a platform to collect and centralize vulnerability information from multiple sources, improving visibility.</li>
+              <li>Built AI-powered software speed up the vulnerability management process and improve the accuracy of information collected about vulnerabilities.</li>
+            </ul>
+          </Card>
+        </div>
+        
+        <div class="timeline-item">
+          <Card>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-accent">Technical Co-Founder & CPO</h3>
+              <span class="text-muted text-sm">Sep 2023 - Nov 2024</span>
+            </div>
+            <div class="text-muted mb-3">Contxtual.tv - GorgeousTV</div>
+            <ul class="space-y-2 text-sm list-disc list-inside">
+              <li>Transformed digital advertising by developing patented AI technology for contextual, shoppable video ads.</li>
+              <li>Collaborated with a high-performing team to launch innovative on-pause ad experiences.</li>
+              <li>Implemented robust security: enforced strict Firestore rules for 1,000+ users, OWASP-compliant password hashing, and granular GCP IAM policies.</li>
+              <li>Secured backend infrastructure by configuring Kubernetes with cloud-sql-proxy and restricting database access to internal services only.</li>
+            </ul>
+          </Card>
+        </div>
+        
+        <div class="timeline-item">
+          <Card>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-accent">Graduate Hourly</h3>
+              <span class="text-muted text-sm">Jun 2023 - Dec 2023</span>
+            </div>
+            <div class="text-muted mb-3">University of Illinois at Chicago</div>
+            <ul class="space-y-2 text-sm list-disc list-inside">
+              <li>Developed 'OCPPStorm', a comprehensive black box fuzzing tool, capable of testing OCPP implementations across multiple platforms.</li>
+              <li>Designed OCPPStorm with three core fuzzing modules (Random Fuzzer, State Machine Fuzzer, and Isla Fuzzer).</li>
+              <li>Discovered 6 critical vulnerabilities and resulted in the assignment of 6 CVEs.</li>
+              <li>Collaborated with cross-functional teams to validate and document vulnerabilities, improving OCPP implementation robustness.</li>
+            </ul>
+          </Card>
+        </div>
+        
+        <div class="timeline-item">
+          <Card>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-accent">Research Assistant</h3>
+              <span class="text-muted text-sm">Jan 2023 - Jun 2023</span>
+            </div>
+            <div class="text-muted mb-3">University of Illinois at Chicago</div>
+            <ul class="space-y-2 text-sm list-disc list-inside">
+              <li>Replicated CVEs on open-source Django servers, focusing on SQL injection and Cross-Site Scripting (XSS) vulnerabilities.</li>
+              <li>Developed a Python script to generate Abstract Syntax Trees, facilitating in-depth security analysis and vulnerability detection.</li>
+              <li>Built a Java tool to construct Control Flow, Data Dependency, and Call Graphs for comprehensive Code Property Graph analysis.</li>
+              <li>Specialized in analyzing software security for Python applications, identifying taint-style vulnerabilities.</li>
+            </ul>
+          </Card>
+        </div>
+        
+        <div class="timeline-item">
+          <Card>
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-accent">Android Tester</h3>
+              <span class="text-muted text-sm">Mar 2021 - Jul 2021</span>
+            </div>
+            <div class="text-muted mb-3">Feedback Italia</div>
+            <ul class="space-y-2 text-sm list-disc list-inside">
+              <li>Designed and executed a comprehensive testing strategy for Feedback Italia's Android app.</li>
+              <li>Delivered 50% faster test cycles and reducing time-to-market by 70%.</li>
+              <li>Cooperated with 1 student and 2 members of the Android team to finalize the project on time.</li>
+            </ul>
+          </Card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section class="section">
+    <div class="container">
+      <SectionHeading 
+        eyebrow="Education"
+        title="Academic Background"
+      />
+      
+      <div class="grid-2">
+        <Card>
+          <h3 class="text-accent mb-2">MSc in Computer Science</h3>
+          <div class="text-muted mb-3">University of Illinois at Chicago • 2022-2023</div>
+          <div class="text-sm space-y-2">
+            <p><strong>GPA:</strong> 4.0</p>
+            <p><strong>Focus:</strong> Web development, AI, cybersecurity, software engineering, Android development</p>
+            <p><strong>Thesis:</strong> Cybersecurity with focus on web security</p>
+          </div>
+        </Card>
+        
+        <Card>
+          <h3 class="text-accent mb-2">MSc in Computer Engineering</h3>
+          <div class="text-muted mb-3">Politecnico di Torino • 2021-2023</div>
+          <div class="text-sm space-y-2">
+            <p><strong>Focus:</strong> Concurrent programming, operating systems, software engineering, cybersecurity, web development</p>
+            <p><strong>Specialization:</strong> Advanced software engineering and cybersecurity</p>
+          </div>
+        </Card>
+
+        <Card>
+          <h3 class="text-accent mb-2">BSc in Computer Science</h3>
+          <div class="text-muted mb-3">Politecnico di Torino • 2018-2021</div>
+          <div class="text-sm space-y-2">
+            <p><strong>Focus:</strong> Computer science fundamentals, algorithms, data structures</p>
+            <p><strong>Specialization:</strong> Software engineering and systems programming</p>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,116 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Terminal from '../components/Terminal.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Card from '../components/Card.astro';
+import SkillBadge from '../components/SkillBadge.astro';
+---
+
+<Layout title="Gaetano Coppoletta - Software Developer focused on cybersecurity, building security automation and vulnerability intelligence tools.">
+  <!-- Hero Section -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-2 items-center">
+        <div>
+          <div class="eyebrow">Software Developer · Cybersecurity</div>
+          <h1 class="mb-4">I design and build security automation and vulnerability intelligence tools. </h1>
+         
+          <div class="flex flex-wrap gap-4">
+            <a href="/about/" class="btn">About me</a>
+            <a href="/projects/" class="btn btn-secondary">Projects</a>
+          </div>
+        </div>
+        <div class="flex justify-center">
+          <img 
+            src="/images/gaetano.jpg" 
+            alt="Portrait of Gaetano Coppoletta" 
+            class="portrait w-64 h-64 object-cover"
+            width="256"
+            height="256"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Terminal Strip -->
+  <section class="section bg-surface border-y border-stroke">
+    <div class="container">
+      <Terminal 
+        lines={[
+          'whoami',
+          'echo "Gaetano Coppoletta - Software Developer"',
+          'ls -la ~/projects/',
+          'cat ~/.bashrc | grep -i "security"',
+          'ps aux | grep -i "ocpp"'
+        ]}
+        prefix="$"
+        loop={true}
+      />
+    </div>
+  </section>
+
+  <!-- Highlights Section -->
+  <section class="section">
+    <div class="container">
+      <SectionHeading 
+        eyebrow="Recent Work"
+        title="Security Research & Development"
+        subtitle="Tools and platforms I've built to improve cybersecurity practices"
+      />
+      
+      <div class="space-y-8">
+        <!-- Oracle Job Card -->
+        <Card>
+          <h3 class="text-accent mb-3">Oracle - Software Developer, Global Product Security</h3>
+          <p class="text-muted mb-4">
+            Currently working as a Software Developer in Oracle's Global Product Security team, where I focus on 
+            building security automation tools and vulnerability intelligence platforms. 
+            I build AI tools to automate vulnerability management processes, improving the efficiency 
+            and accuracy of security assessments.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <SkillBadge skill="AI/ML" />
+            <SkillBadge skill="CVSS Scoring" />
+            <SkillBadge skill="Security Automation" />
+            <SkillBadge skill="Vulnerability Research" />
+            <SkillBadge skill="Product Security" />
+            <SkillBadge skill="Enterprise Security" />
+            <SkillBadge skill="Security Tools" />
+            <SkillBadge skill="Threat Intelligence" />
+          </div>
+          <div class="space-y-2 text-sm">
+            <p><strong>Role:</strong> Software Developer, Global Product Security</p>
+            <p><strong>Duration:</strong> February 2025 - Present</p>
+            <p><strong>Focus:</strong> AI-powered security automation, CVSS scoring automation, and vulnerability management platforms</p>
+            <p><strong>Impact:</strong> Contributing to Oracle's comprehensive security posture and product protection through intelligent automation</p>
+          </div>
+        </Card>
+
+        <!-- OCPPStorm Project Card -->
+        <Card>
+          <h3 class="text-accent mb-3">OCPPStorm: A Comprehensive Fuzzing Tool for OCPP Implementations</h3>
+          <p class="text-muted mb-4">
+            A comprehensive black box fuzzing tool that identified multiple critical vulnerabilities in OCPP implementations, 
+            leading to the discovery of CVEs and improved security for electric vehicle charging infrastructure. 
+            The tool employs multiple fuzzing strategies including Random Fuzzer, State Machine Fuzzer, and Isla Fuzzer.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <SkillBadge skill="Python" />
+            <SkillBadge skill="Fuzzing" />
+            <SkillBadge skill="OCPP" />
+            <SkillBadge skill="CVE" />
+            <SkillBadge skill="Research" />
+            <SkillBadge skill="Protocol Security" />
+          </div>
+          <div class="space-y-2 text-sm">
+            <p><strong>Results:</strong> 6 CVEs discovered and assigned</p>
+            <p><strong>Publication:</strong> Network and Distributed System Security (VehicleSec) 2024 - NDSS Symposium</p>
+            <p><strong>Impact:</strong> Improved security of electric vehicle charging infrastructure. All the CVEs were addressed and fixed by the OCPP implementers.</p>
+          </div>
+          <a href="/projects/" class="text-accent hover:text-text transition-colors">Learn more →</a>
+        </Card>
+      </div>
+    </div>
+  </section>
+</Layout>

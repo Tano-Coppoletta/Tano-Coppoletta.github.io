@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Card from '../components/Card.astro';
+import SkillBadge from '../components/SkillBadge.astro';
+import Terminal from '../components/Terminal.astro';
+---
+
+<Layout title="Projects - Gaetano Coppoletta" description="Security projects - OCPPStorm fuzzer.">
+  
+  <section class="section">
+    <div class="container">
+      <SectionHeading 
+        eyebrow="Projects"
+        title="Security Research & Development"
+        subtitle="Tools, platforms, and research that improve cybersecurity practices"
+      />
+      
+      <div class="space-y-8">
+        <!-- OCPPStorm Project -->
+        <Card>
+          <div class="grid-2 items-start">
+            <div>
+              <h3 class="text-accent mb-3">OCPPStorm: A Comprehensive Fuzzing Tool for OCPP Implementations</h3>
+              <p class="text-muted mb-4">
+                A comprehensive black box fuzzing tool that identified multiple critical vulnerabilities in OCPP implementations, 
+                leading to the discovery of CVEs and improved security for electric vehicle charging infrastructure. 
+                The tool employs multiple fuzzing strategies including Random Fuzzer, State Machine Fuzzer, and Isla Fuzzer 
+                to test OCPP implementations across different platforms (Java, .NET).
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <SkillBadge skill="Java" />
+                <SkillBadge skill="Fuzzing" />
+                <SkillBadge skill="OCPP" />
+                <SkillBadge skill="CVE" />
+                <SkillBadge skill="Research" />
+                <SkillBadge skill="Protocol Security" />
+                <SkillBadge skill="Black Box Testing" />
+                <SkillBadge skill="State Machine" />
+              </div>
+              <div class="space-y-2 text-sm mb-4">
+                <p><strong>Results:</strong> 6 CVEs discovered and assigned</p>
+                <p><strong>Publication:</strong> Network and Distributed System Security (VehicleSec) 2024</p>
+                <p><strong>Date:</strong> February 2024</p>
+                <p><strong>Impact:</strong> Improved security of electric vehicle charging infrastructure</p>
+                <p><strong>Vulnerabilities:</strong> Improper handling of 'StartTransaction' messages, predictable transaction IDs, denial-of-service and data integrity issues</p>
+              </div>
+              <div class="flex flex-wrap gap-4">
+                <a 
+                  href="https://www.ndss-symposium.org/wp-content/uploads/vehiclesec2024-69-paper.pdf" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="btn"
+                >
+                  Read Paper →
+                </a>
+               
+              </div>
+            </div>
+            <div class="flex justify-center">
+              <div class="w-48 min-h-32 bg-surface border border-stroke rounded-lg flex flex-col items-center justify-center p-4">
+                <span class="text-muted text-sm mb-3 font-medium">CVEs Discovered</span>
+                <div class="flex flex-wrap gap-1 justify-center">
+                  <span class="badge badge-secondary text-xs">CVE-2024-25407</span>
+                  <span class="badge badge-secondary text-xs">CVE-2023-52096</span>
+                  <span class="badge badge-secondary text-xs">CVE-2023-49958</span>
+                  <span class="badge badge-secondary text-xs">CVE-2023-49957</span>
+                  <span class="badge badge-secondary text-xs">CVE-2023-49955</span>
+                  <span class="badge badge-secondary text-xs">CVE-2023-49956</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+      </div>
+    </div>
+  </section>
+    <!-- Terminal Strip -->
+    <section class="section bg-surface border-y border-stroke">
+      <div class="container">
+        <Terminal 
+          lines={[
+            'cd ocppstorm && ls -la',
+            'find . -name "*.py" | wc -l',
+            'echo "6 CVEs discovered with this tool"'
+          ]}
+          prefix="$"
+          loop={true}
+        />
+      </div>
+    </section>
+ 
+</Layout>

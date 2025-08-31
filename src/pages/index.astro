@@ -22,7 +22,7 @@ import SkillBadge from '../components/SkillBadge.astro';
         </div>
         <div class="flex justify-center">
           <img 
-            src="/images/gaetano.jpg" 
+            src={`${Astro.site ? `/${import.meta.env.PUBLIC_REPO_NAME}` : ''}/images/gaetano.jpg`} 
             alt="Portrait of Gaetano Coppoletta" 
             class="portrait w-64 h-64 object-cover"
             width="256"

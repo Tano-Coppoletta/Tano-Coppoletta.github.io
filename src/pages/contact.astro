@@ -117,12 +117,24 @@ import Terminal from '../components/Terminal.astro';
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const messageEl = document.getElementById('message');
-        const subjectEl = document.getElementById('subject');
+        const messageEl = document.getElementById('message') as HTMLTextAreaElement;
+        const subjectEl = document.getElementById('subject') as HTMLInputElement;
         
-        if (messageEl && subjectEl && 'value' in messageEl && 'value' in subjectEl) {
-          const mailtoUrl = `mailto:tano.coppoletta@gmail.com?subject=${encodeURIComponent(subjectEl.value)}&body=${encodeURIComponent(messageEl.value)}`;
-          window.location.href = mailtoUrl;
+        if (messageEl && subjectEl && messageEl.value && subjectEl.value) {
+          const subject = subjectEl.value.trim().substring(0, 1000); // Limit length
+          const message = messageEl.value.trim().substring(0, 2000); // Limit length
+          
+          // Basic validation
+          if (subject.length === 0 || message.length === 0) {
+            alert('Please fill in both subject and message fields.');
+            return;
+          }
+          
+          // Create mailto URL with sanitized data
+          const mailtoUrl = `mailto:tano.coppoletta@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+          
+          // Use window.open instead of window.location.href for better security
+          window.open(mailtoUrl, '_blank');
         }
       });
     }

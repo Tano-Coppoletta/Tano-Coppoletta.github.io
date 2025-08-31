@@ -3,7 +3,7 @@ import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   integrations: [tailwind()],
-  site: 'https://gaetano-coppoletta.github.io',
+  site: 'https://gaetanocoppoletta.com',
   base: '',
   trailingSlash: 'always',
   build: {

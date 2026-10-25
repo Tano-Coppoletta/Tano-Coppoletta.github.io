@@ -1,0 +1,186 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/build-lab.css';
+---
+
+<Layout
+  title="The Build Lab | Gaetano Coppoletta"
+  description="Explore software engineering, AI systems, product work, research, and community leadership."
+>
+  <section class="build-intro">
+    <div class="build-intro-copy">
+      <p class="build-eyebrow">Software engineering · AI systems · applied security</p>
+      <h1>The Build Lab</h1>
+      <p class="build-lede">I build AI-powered software, take ownership quickly, and deliver measurable outcomes. Security is part of how I build.</p>
+    </div>
+    <div class="build-intro-actions">
+      <a class="build-primary-link" href="#world">Enter the hub <span aria-hidden="true">↓</span></a>
+      <a class="build-secondary-link" href="/about/">Read the full profile</a>
+    </div>
+  </section>
+
+  <section class="build-world-section" id="world" aria-label="Interactive portfolio hub">
+    <div class="build-world-grid">
+      <div class="build-scene-card">
+        <div class="build-scene-topbar">
+          <span><span class="live-dot"></span> BUILD LAB <span class="topbar-divider">/</span> CENTRAL HUB</span>
+          <span class="keyboard-hint">MOVE <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> OR ARROWS <span class="topbar-divider">·</span> INTERACT <kbd>ENTER</kbd></span>
+        </div>
+        <div class="build-scene-wrap">
+          <canvas
+            id="build-scene"
+            aria-label="A small three-dimensional hub with four portfolio portals. Use the map buttons to explore."
+            role="img"
+            tabindex="0"
+          ></canvas>
+          <div class="scene-label scene-label-ai" aria-hidden="true"><span>01</span> AGENT WORKBENCH</div>
+          <div class="scene-label scene-label-product" aria-hidden="true"><span>02</span> PRODUCT STUDIO</div>
+          <div class="scene-label scene-label-engineering" aria-hidden="true"><span>03</span> ENGINEERING LAB</div>
+          <div class="scene-label scene-label-community" aria-hidden="true"><span>04</span> COMMUNITY</div>
+          <div id="scene-status" class="scene-status" role="status" aria-live="polite">Start at the hub. Select a portal or walk toward one and press Enter.</div>
+          <div id="webgl-fallback" class="webgl-fallback" hidden>
+            3D rendering is unavailable in this browser. The portfolio map and all story cards below still work.
+          </div>
+        </div>
+        <div class="build-scene-bottom">
+          <span>STYLIZED AVATAR · PLACEHOLDER MODEL</span>
+          <span>NO LOGIN · NO DOWNLOAD · NO DATA COLLECTED</span>
+        </div>
+      </div>
+
+      <aside class="build-map-card" aria-label="Build Lab map">
+        <div class="map-card-heading">
+          <div>
+            <p class="build-eyebrow">Explore by destination</p>
+            <h2>Choose a portal</h2>
+          </div>
+          <span class="map-compass" aria-hidden="true">N<br />↑</span>
+        </div>
+        <div class="portal-list" role="group" aria-label="Portfolio destinations">
+          <button class="portal-button is-active" type="button" data-stop="agents" aria-pressed="true">
+            <span class="portal-number">01</span>
+            <span><strong>Agent Workbench</strong><small>AI systems · Oracle</small></span>
+            <span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button class="portal-button" type="button" data-stop="product" aria-pressed="false">
+            <span class="portal-number">02</span>
+            <span><strong>Product Studio</strong><small>Founder · CPO</small></span>
+            <span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button class="portal-button" type="button" data-stop="engineering" aria-pressed="false">
+            <span class="portal-number">03</span>
+            <span><strong>Engineering Lab</strong><small>Research · shipped work</small></span>
+            <span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button class="portal-button" type="button" data-stop="community" aria-pressed="false">
+            <span class="portal-number">04</span>
+            <span><strong>Community & Leadership</strong><small>Italian Tech Club · IEEE-HKN</small></span>
+            <span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+        </div>
+        <div class="map-card-footer">
+          <span class="map-marker" aria-hidden="true"></span>
+          <span>ALL PORTALS ARE OPTIONAL. THE MAP IS THE FAST PATH.</span>
+        </div>
+      </aside>
+    </div>
+
+    <div class="touch-pad" role="group" aria-label="Touch movement controls">
+      <button type="button" data-move="forward" aria-label="Move forward">↑</button>
+      <button type="button" data-move="left" aria-label="Move left">←</button>
+      <button type="button" data-move="back" aria-label="Move back">↓</button>
+      <button type="button" data-move="right" aria-label="Move right">→</button>
+    </div>
+
+    <section class="story-card" id="story-panel" aria-live="polite" aria-atomic="true">
+      <div class="story-card-topline">
+        <span id="story-kicker" class="build-eyebrow">01 / AI systems</span>
+        <a href="/about/#experience">Full career timeline <span aria-hidden="true">↗</span></a>
+      </div>
+
+      <article class="story-pane" data-pane="agents">
+        <h2>Agent Workbench</h2>
+        <p class="story-lede">Building AI-powered systems and software for complex, high-stakes workflows.</p>
+        <div class="impact-grid">
+          <div class="impact-tile"><strong>~2,000</strong><span>security engineers supported by a vulnerability-management platform</span></div>
+          <div class="impact-tile"><strong>1,500+</strong><span>estimated person-hours saved each month</span></div>
+          <div class="impact-tile"><strong>Quarterly → monthly</strong><span>patch-release cadence shift the work contributed to</span></div>
+          <div class="impact-tile"><strong>1.5M+</strong><span>customers reached by advisories using an AI validation layer</span></div>
+        </div>
+        <ul class="story-points">
+          <li>Built an AI-powered tool to automate vulnerability intake.</li>
+          <li>Presented a tool to C-level leaders; it was adopted Oracle-wide.</li>
+          <li>Own a mission-critical Java application end to end; mentor engineers.</li>
+          <li>Received three organizational Spotlight Awards in 18 months.</li>
+        </ul>
+        <p class="story-note">Case studies intentionally stay at a public, high-level: no internal product names, architecture, customer data, or operational details.</p>
+      </article>
+
+      <article class="story-pane" data-pane="product" hidden>
+        <h2>Product Studio</h2>
+        <p class="story-lede">Technical Co-Founder &amp; CPO · Contxtual.tv / GorgeousTV · Sep 2023–Nov 2024</p>
+        <ul class="story-points">
+          <li>Helped build AI technology for contextual, shoppable video experiences.</li>
+          <li>Worked across product and engineering to ship on-pause ad experiences.</li>
+          <li>Implemented security controls for a platform serving 1,000+ users.</li>
+        </ul>
+        <a class="story-link" href="/about/#experience">See the full role history <span aria-hidden="true">↗</span></a>
+      </article>
+
+      <article class="story-pane" data-pane="engineering" hidden>
+        <h2>Engineering Lab</h2>
+        <p class="story-lede">Research depth and practical engineering, including the early-career role that still belongs on the timeline.</p>
+        <ul class="story-points">
+          <li><strong>Feedback Italia · Software Engineer · Mar–Jul 2021:</strong> Android UI tests with UI Automator and Espresso for critical flows and regression coverage.</li>
+          <li><strong>UIC · Research Assistant · Jan–Jun 2023:</strong> program-analysis tools and software-security research.</li>
+          <li><strong>UIC · Graduate Hourly · Jun–Dec 2023:</strong> built OCPPStorm; six CVEs were assigned and the work was published at VehicleSec 2024.</li>
+        </ul>
+        <a class="story-link" href="/projects/">Browse research and projects <span aria-hidden="true">↗</span></a>
+      </article>
+
+      <article class="story-pane" data-pane="community" hidden>
+        <h2>Community &amp; Leadership</h2>
+        <p class="story-lede">A repeatable pattern: step up early, bring people together, and deliver.</p>
+        <ul class="story-points">
+          <li><strong>Founder · Italian Tech Club:</strong> founded a Bay Area nonprofit connecting tech leaders and workers; grew to 150+ members in less than a year.</li>
+          <li><strong>Head of Communication · IEEE-HKN:</strong> became team lead after four months in the communications group and led communications for the year's most important events.</li>
+        </ul>
+        <a class="story-link" href="/about/">More about Gaetano <span aria-hidden="true">↗</span></a>
+      </article>
+    </section>
+  </section>
+
+  <section class="portfolio-fallback" aria-labelledby="fallback-title">
+    <div class="fallback-heading">
+      <p class="build-eyebrow">Text-first portfolio</p>
+      <h2 id="fallback-title">The work, without the game</h2>
+      <p>Every detail is available as ordinary page content too—no movement or 3D required.</p>
+    </div>
+    <div class="fallback-grid">
+      <a href="/about/#experience"><strong>Agent Workbench</strong><span>AI-assisted validation and intake, platform adoption, measurable outcomes, and engineering ownership.</span></a>
+      <a href="/about/#experience"><strong>Product Studio</strong><span>Technical co-founder and CPO work building contextual video products.</span></a>
+      <a href="/projects/"><strong>Engineering Lab</strong><span>OCPPStorm, six assigned CVEs, VehicleSec 2024, UIC research, and Feedback Italia.</span></a>
+      <a href="/about/"><strong>Community & Leadership</strong><span>Italian Tech Club founder and IEEE-HKN communication-team lead.</span></a>
+    </div>
+    <div class="full-timeline">
+      <strong>Work history</strong>
+      <span>Oracle · Feb 2025–present</span>
+      <span>Contxtual.tv / GorgeousTV · Sep 2023–Nov 2024</span>
+      <span>UIC Graduate Hourly · Jun–Dec 2023</span>
+      <span>UIC Research Assistant · Jan–Jun 2023</span>
+      <span>Feedback Italia · Mar–Jul 2021</span>
+    </div>
+  </section>
+
+  <section class="build-endcap">
+    <p>Want the conventional route?</p>
+    <div>
+      <a href="/about/">About &amp; experience</a>
+      <a href="/projects/">Projects</a>
+      <a href="/contact/">Contact</a>
+      <a href="https://www.linkedin.com/in/gaetano-coppoletta/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+    </div>
+  </section>
+</Layout>
+
+<script src="../scripts/buildLab.js"></script>

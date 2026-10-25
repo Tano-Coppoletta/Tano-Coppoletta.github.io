@@ -132,11 +132,34 @@ function startWorld(context, sceneCanvas) {
       gl_FragColor = vec4(vColor, 1.0);
     }
   `;
+  const textureVertexSource = `
+    attribute vec3 aPosition;
+    attribute vec2 aTexCoord;
+    uniform mat4 uViewProjection;
+    varying vec2 vTexCoord;
+    void main() {
+      gl_Position = uViewProjection * vec4(aPosition, 1.0);
+      vTexCoord = aTexCoord;
+    }
+  `;
+  const textureFragmentSource = `
+    precision mediump float;
+    uniform sampler2D uTexture;
+    varying vec2 vTexCoord;
+    void main() {
+      gl_FragColor = texture2D(uTexture, vTexCoord);
+    }
+  `;
 
   const program = createProgram(context, vertexSource, fragmentSource);
   const positionLocation = context.getAttribLocation(program, 'aPosition');
   const colorLocation = context.getAttribLocation(program, 'aColor');
   const matrixLocation = context.getUniformLocation(program, 'uViewProjection');
+  const textureProgram = createProgram(context, textureVertexSource, textureFragmentSource);
+  const texturePositionLocation = context.getAttribLocation(textureProgram, 'aPosition');
+  const textureCoordinateLocation = context.getAttribLocation(textureProgram, 'aTexCoord');
+  const textureMatrixLocation = context.getUniformLocation(textureProgram, 'uViewProjection');
+  const textureSamplerLocation = context.getUniformLocation(textureProgram, 'uTexture');
   const worldData = [];
 
   buildWorld(worldData);
@@ -146,6 +169,26 @@ function startWorld(context, sceneCanvas) {
   context.bufferData(context.ARRAY_BUFFER, new Float32Array(worldData), context.STATIC_DRAW);
   const worldVertexCount = worldData.length / 6;
   const playerBuffer = context.createBuffer();
+  const faceBuffer = context.createBuffer();
+  const faceTexture = context.createTexture();
+  let faceTextureReady = false;
+
+  if (faceTexture) {
+    const faceImage = new Image();
+    faceImage.onload = () => {
+      context.bindTexture(context.TEXTURE_2D, faceTexture);
+      context.pixelStorei(context.UNPACK_FLIP_Y_WEBGL, true);
+      context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.NEAREST);
+      context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.NEAREST);
+      context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_S, context.CLAMP_TO_EDGE);
+      context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_T, context.CLAMP_TO_EDGE);
+      context.texImage2D(context.TEXTURE_2D, 0, context.RGBA, context.RGBA, context.UNSIGNED_BYTE, faceImage);
+      faceTextureReady = true;
+      scheduleDraw();
+    };
+    faceImage.onerror = () => console.warn('Pixel portrait could not be loaded; using the default avatar face.');
+    faceImage.src = '/images/gaetano-avatar-pixel.png';
+  }
 
   context.enable(context.DEPTH_TEST);
   context.depthFunc(context.LEQUAL);
@@ -203,6 +246,7 @@ function startWorld(context, sceneCanvas) {
 
     context.clearColor(0.035, 0.055, 0.068, 1);
     context.clear(context.COLOR_BUFFER_BIT | context.DEPTH_BUFFER_BIT);
+    context.useProgram(program);
     context.uniformMatrix4fv(matrixLocation, false, viewProjection);
     bindAttributes(worldBuffer);
     context.drawArrays(context.TRIANGLES, 0, worldVertexCount);
@@ -213,6 +257,27 @@ function startWorld(context, sceneCanvas) {
     context.bufferData(context.ARRAY_BUFFER, new Float32Array(figureData), context.DYNAMIC_DRAW);
     bindAttributes(playerBuffer);
     context.drawArrays(context.TRIANGLES, 0, figureData.length / 6);
+
+    if (faceTextureReady) {
+      const faceData = buildAvatarFace(player.x, player.z);
+      context.useProgram(textureProgram);
+      context.uniformMatrix4fv(textureMatrixLocation, false, viewProjection);
+      context.activeTexture(context.TEXTURE0);
+      context.bindTexture(context.TEXTURE_2D, faceTexture);
+      context.uniform1i(textureSamplerLocation, 0);
+      context.bindBuffer(context.ARRAY_BUFFER, faceBuffer);
+      context.bufferData(context.ARRAY_BUFFER, faceData, context.DYNAMIC_DRAW);
+      context.enableVertexAttribArray(texturePositionLocation);
+      context.vertexAttribPointer(texturePositionLocation, 3, context.FLOAT, false, 20, 0);
+      context.enableVertexAttribArray(textureCoordinateLocation);
+      context.vertexAttribPointer(textureCoordinateLocation, 2, context.FLOAT, false, 20, 12);
+      context.enable(context.BLEND);
+      context.blendFunc(context.SRC_ALPHA, context.ONE_MINUS_SRC_ALPHA);
+      context.depthMask(false);
+      context.drawArrays(context.TRIANGLES, 0, 6);
+      context.depthMask(true);
+      context.disable(context.BLEND);
+    }
 
     const nearby = nearestStop();
     if (nearby) {
@@ -330,6 +395,22 @@ function buildAvatar(vertices, x, z) {
   addBox(vertices, x, 1.66, z - 0.015, 0.46, 0.16, 0.43, hair);
   addBox(vertices, x, 1.53, z - 0.21, 0.16, 0.08, 0.035, [0.08, 0.12, 0.14]);
   addBox(vertices, x - 0.35, 0.88, z + 0.2, 0.15, 0.46, 0.12, [0.96, 0.68, 0.29]);
+}
+
+function buildAvatarFace(x, z) {
+  const left = x - 0.2;
+  const right = x + 0.2;
+  const bottom = 1.23;
+  const top = 1.63;
+  const front = z + 0.206;
+  return new Float32Array([
+    left, bottom, front, 0, 0,
+    right, bottom, front, 1, 0,
+    right, top, front, 1, 1,
+    left, bottom, front, 0, 0,
+    right, top, front, 1, 1,
+    left, top, front, 0, 1,
+  ]);
 }
 
 function addBox(vertices, cx, cy, cz, width, height, depth, color, rotation = 0) {

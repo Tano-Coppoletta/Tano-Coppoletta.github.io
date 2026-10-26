@@ -1,0 +1,271 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/build-lab.css';
+---
+
+<Layout
+  title="Retro City | Gaetano Coppoletta"
+  description="Explore a pixel-art San Francisco as Tano, an animated 3D character. Discover Gaetano Coppoletta's software engineering, AI systems, research, and leadership."
+>
+<div class="build-lab-page">
+  <section class="build-intro" aria-labelledby="build-title">
+    <div class="build-intro-copy">
+      <p class="build-eyebrow">Software engineering · AI systems · product delivery</p>
+      <h1 id="build-title">The Build Lab</h1>
+      <p class="build-lede">I build AI-powered software and agent workflows, take ownership quickly, and deliver useful outcomes. Security is part of how I build.</p>
+    </div>
+    <nav class="build-quick-links" aria-label="Profile links">
+      <a class="build-primary-link" href="#workshop">Enter the workshop <span aria-hidden="true">↓</span></a>
+      <a href="/about/">Text-first portfolio</a>
+      <a href="/contact/">Contact</a>
+      <a href="https://www.linkedin.com/in/gaetano-coppoletta/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+      <a href="https://github.com/Tano-Coppoletta" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <!-- No résumé file or URL exists in the source project; do not invent one. -->
+    </nav>
+  </section>
+
+  <section class="build-world-section" id="workshop" aria-label="Interactive portfolio city">
+    <div class="build-world-grid">
+      <div class="build-scene-card">
+        <div class="build-scene-topbar">
+          <span><span class="live-dot" aria-hidden="true"></span> RETRO CITY <span class="topbar-divider">/</span> SAN FRANCISCO · 198X</span>
+          <span class="keyboard-hint">WALK <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> · INTERACT <kbd>E</kbd></span>
+        </div>
+        <div class="build-scene-wrap">
+          <canvas
+            id="build-scene"
+            aria-label="Pixel-art San Francisco at sunset. Move Tano with WASD or arrow keys, press E near an entrance, or use the map to open portfolio stories."
+            role="img"
+            tabindex="0"
+          ></canvas>
+          <button class="scene-label scene-label-ai" type="button" data-stop="agents" data-gate="projects">PROJECTS</button>
+          <button class="scene-label scene-label-product" type="button" data-overlay="career" data-gate="about">ABOUT</button>
+          <button class="scene-label scene-label-contact" type="button" data-overlay="contact" data-gate="contact">CONTACT</button>
+          <div id="scene-status" class="scene-status" role="status" aria-live="polite">Click the street to walk · WASD or arrows · E to enter · Map for direct access</div>
+          <div id="webgl-fallback" class="webgl-fallback" hidden>
+            The city artwork could not be loaded. Open the map or career path to explore every portfolio detail.
+          </div>
+        </div>
+        <div class="touch-pad" role="group" aria-label="Touch movement controls">
+          <button type="button" data-move="forward" aria-label="Move forward">↑</button>
+          <button type="button" data-move="left" aria-label="Move left">←</button>
+          <button type="button" data-move="back" aria-label="Move back">↓</button>
+          <button type="button" data-move="right" aria-label="Move right">→</button>
+        </div>
+        <div class="build-scene-bottom">
+          <span>TANO · 3D STREET EXPLORER</span>
+          <span>NO LOGIN · NO DATA COLLECTED</span>
+        </div>
+      </div>
+
+      <aside class="build-map-card" id="workshop-map" aria-label="Workshop map" hidden>
+        <div class="map-card-heading">
+          <div>
+            <p class="build-eyebrow">Four exhibits · one short visit</p>
+            <h2 tabindex="-1">Explore the city</h2>
+          </div>
+          <span class="map-compass" aria-hidden="true">N<br />↑</span>
+          <button class="overlay-close" type="button" data-overlay-close aria-label="Close workshop map">×</button>
+        </div>
+        <div class="portal-list" role="group" aria-label="Portfolio destinations">
+          <button class="portal-button is-active" type="button" data-stop="agents" aria-pressed="true" aria-controls="story-panel">
+            <span class="portal-number">01</span>
+            <span><strong>Agent Workbench</strong><small>AI-assisted software · Oracle</small></span>
+            <span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button class="portal-button" type="button" data-stop="product" aria-pressed="false" aria-controls="story-panel">
+            <span class="portal-number">02</span>
+            <span><strong>Product Studio</strong><small>Technical co-founder · CPO</small></span>
+            <span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button class="portal-button" type="button" data-stop="engineering" aria-pressed="false" aria-controls="story-panel">
+            <span class="portal-number">03</span>
+            <span><strong>Engineering &amp; Research</strong><small>OCPPStorm · UIC · Feedback Italia</small></span>
+            <span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button class="portal-button" type="button" data-stop="community" aria-pressed="false" aria-controls="story-panel">
+            <span class="portal-number">04</span>
+            <span><strong>Community &amp; Leadership</strong><small>Italian Tech Club · IEEE-HKN</small></span>
+            <span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+        </div>
+        <div class="map-card-footer">
+          <span class="map-marker" aria-hidden="true"></span>
+          <span>MAP CLICKS OPEN STORIES DIRECTLY. MOVEMENT IS OPTIONAL.</span>
+        </div>
+      </aside>
+    </div>
+
+    <section class="story-card" id="story-panel" aria-label="Selected portfolio story" aria-live="polite" aria-atomic="false" hidden>
+      <div class="story-card-topline">
+        <span id="story-kicker" class="build-eyebrow">01 / AI systems</span>
+        <div class="story-actions">
+          <button type="button" data-overlay="career">Career Path <span aria-hidden="true">↓</span></button>
+          <button id="close-story-panel" type="button" data-overlay-close aria-label="Close selected story">Close <span aria-hidden="true">×</span></button>
+        </div>
+      </div>
+      <nav class="story-tabs" aria-label="Portfolio stories">
+        <button type="button" data-stop="agents">AI systems</button>
+        <button type="button" data-stop="product">Product</button>
+        <button type="button" data-stop="engineering">Engineering</button>
+        <button type="button" data-stop="community">Leadership</button>
+      </nav>
+
+      <article class="story-pane" data-pane="agents">
+        <div class="story-heading-row">
+          <div><p class="story-tag">FEATURED · ORACLE · FEB 2025–PRESENT</p><h2 tabindex="-1">Agent Workbench</h2></div>
+          <span class="story-mark" aria-hidden="true">AI</span>
+        </div>
+        <p class="story-lede">AI-assisted software and agent workflows for complex, high-stakes work—built with product judgment, reliability, and careful human review.</p>
+        <div class="work-card-grid">
+          <div class="work-card"><span>01 · BUILD</span><strong>AI-assisted review</strong><p>Designed and shipped a full-stack advisory-review experience with an AI validation layer.</p></div>
+          <div class="work-card"><span>02 · AUTOMATE</span><strong>Workflow tooling</strong><p>Built AI-powered tooling to streamline vulnerability intake and reduce repetitive work.</p></div>
+          <div class="work-card"><span>03 · OWN</span><strong>End-to-end engineering</strong><p>Own a mission-critical Java application, including reliability improvements, and mentor engineers.</p></div>
+        </div>
+        <p class="story-note">Oracle project details and quantitative impact are intentionally kept high-level until public approval is confirmed.</p>
+      </article>
+
+      <article class="story-pane" data-pane="product" hidden>
+        <div class="story-heading-row">
+          <div><p class="story-tag">PRODUCT OWNERSHIP · SEP 2023–NOV 2024</p><h2 tabindex="-1">Product Studio</h2></div>
+          <span class="story-mark story-mark-coral" aria-hidden="true">PM</span>
+        </div>
+        <p class="story-lede">Technical Co-Founder &amp; CPO · Contxtual.tv / GorgeousTV</p>
+        <ul class="story-points">
+          <li>Owned product direction and full-stack execution for a contextual-video product.</li>
+          <li>Worked across engineering and product to move ideas into shipped experiences.</li>
+          <li>Built across the stack and partnered cross-functionally through delivery.</li>
+        </ul>
+        <a class="story-link" href="/about/#experience">See the full role history <span aria-hidden="true">↗</span></a>
+      </article>
+
+      <article class="story-pane" data-pane="engineering" hidden>
+        <div class="story-heading-row">
+          <div><p class="story-tag">RESEARCH · TESTING · SYSTEMS</p><h2 tabindex="-1">Engineering &amp; Research</h2></div>
+          <span class="story-mark story-mark-teal" aria-hidden="true">R&amp;D</span>
+        </div>
+        <p class="story-lede">Practical engineering backed by research, careful testing, and published work.</p>
+        <ul class="story-points">
+          <li><strong>Feedback Italia · Software Engineer · Mar–Jul 2021:</strong> designed Android UI tests with UI Automator and Espresso for critical flows and regression coverage.</li>
+          <li><strong>UIC · Research Assistant · Jan–Jun 2023:</strong> built program-analysis tools and worked on software-security research.</li>
+          <li><strong>UIC · Graduate Hourly · Jun–Dec 2023:</strong> developed OCPPStorm; six CVEs were assigned and the work appeared at VehicleSec 2024.</li>
+        </ul>
+        <a class="story-link" href="/projects/">Read the published OCPPStorm paper <span aria-hidden="true">↗</span></a>
+      </article>
+
+      <article class="story-pane" data-pane="community" hidden>
+        <div class="story-heading-row">
+          <div><p class="story-tag">BUILDING COMMUNITY · LEADING EARLY</p><h2 tabindex="-1">Community &amp; Leadership</h2></div>
+          <span class="story-mark story-mark-sage" aria-hidden="true">+150</span>
+        </div>
+        <p class="story-lede">A consistent pattern: step up early, bring people together, and deliver.</p>
+        <ul class="story-points">
+          <li><strong>Founder · Italian Tech Club:</strong> founded a Bay Area nonprofit connecting tech leaders and workers; grew to 150+ members in less than a year.</li>
+          <li><strong>Head of Communication · IEEE-HKN:</strong> became team lead after four months and led communications for the organization’s most important events of the year.</li>
+        </ul>
+        <a class="story-link" href="/about/">More about Gaetano <span aria-hidden="true">↗</span></a>
+      </article>
+    </section>
+  </section>
+
+  <nav class="game-hud" aria-label="Workshop controls">
+    <a class="hud-brand" href="/" aria-label="Gaetano Coppoletta home">GC <span>RETRO CITY</span></a>
+    <div class="hud-actions">
+      <button type="button" data-overlay="map">MAP <kbd>M</kbd></button>
+      <button type="button" data-overlay="career">CAREER PATH</button>
+      <button type="button" data-overlay="contact">CONTACT</button>
+    </div>
+  </nav>
+
+  <section class="portfolio-fallback" id="career-overlay" aria-labelledby="career-path" hidden>
+    <div class="fallback-heading">
+      <p class="build-eyebrow">Text-first · always available</p>
+      <h2 id="career-path" tabindex="-1">Career Path</h2>
+      <p>Five roles, the work behind them, and the education that shaped how I build. No movement or 3D required.</p>
+      <button class="overlay-close" type="button" data-overlay-close aria-label="Close career path">Close ×</button>
+    </div>
+    <ol class="career-list">
+      <li class="career-entry career-entry-featured">
+        <div class="career-date">FEB 2025—NOW</div>
+        <div><h3>Software Developer · Global Product Security <span>Oracle</span></h3>
+          <p>Build AI-assisted software and workflow tools for product-security work. Shipped a full-stack advisory-review experience, automated intake, own a mission-critical Java application, and mentor engineers.</p>
+          <p class="career-approval-note">Quantitative impact and internal deployment details are withheld pending public approval.</p>
+        </div>
+      </li>
+      <li class="career-entry">
+        <div class="career-date">SEP 2023—NOV 2024</div>
+        <div><h3>Technical Co-Founder &amp; CPO <span>Contxtual.tv / GorgeousTV</span></h3>
+          <p>Owned product direction and full-stack execution for a contextual-video product, working across engineering and product delivery.</p>
+        </div>
+      </li>
+      <li class="career-entry">
+        <div class="career-date">JUN—DEC 2023</div>
+        <div><h3>Graduate Hourly <span>University of Illinois Chicago</span></h3>
+          <p>Developed OCPPStorm, a black-box OCPP testing tool. The research reported six assigned CVEs and was published at VehicleSec 2024.</p>
+        </div>
+      </li>
+      <li class="career-entry">
+        <div class="career-date">JAN—JUN 2023</div>
+        <div><h3>Research Assistant <span>University of Illinois Chicago</span></h3>
+          <p>Built program-analysis tooling and contributed to software-security research, including Python AST and Java program-graph analysis.</p>
+        </div>
+      </li>
+      <li class="career-entry">
+        <div class="career-date">MAR—JUL 2021 · 5 MONTHS</div>
+        <div><h3>Software Engineer <span>Feedback Italia</span></h3>
+          <p>Designed Android UI tests with UI Automator and Espresso, focusing on critical user flows and regression coverage.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="career-support-grid">
+      <section class="career-support-card" aria-labelledby="education-title">
+        <p class="build-eyebrow">Education</p><h3 id="education-title">Technical foundations</h3>
+        <ul>
+          <li><strong>MSc Computer Science</strong> · University of Illinois Chicago · 2022–2023 · GPA 4.0</li>
+          <li><strong>MSc Computer Engineering</strong> · Politecnico di Torino · 2021–2023</li>
+          <li><strong>BSc Computer Science</strong> · Politecnico di Torino · 2018–2021</li>
+        </ul>
+      </section>
+      <section class="career-support-card" aria-labelledby="mentorship-title">
+        <p class="build-eyebrow">Mentorship &amp; leadership</p><h3 id="mentorship-title">Raise the team</h3>
+        <p>Mentors engineers at Oracle, founded the Italian Tech Club, and led IEEE-HKN communications after four months on the team.</p>
+        <a href="/about/">More about community leadership ↗</a>
+      </section>
+    </div>
+    <section class="skills-strip" aria-labelledby="skills-title">
+      <div><p class="build-eyebrow">Selected skills</p><h3 id="skills-title">Tools I work with</h3></div>
+      <ul aria-label="Selected skills">
+        <li>AI systems</li><li>Java</li><li>Python</li><li>TypeScript</li><li>React</li><li>Full-stack product</li><li>Program analysis</li><li>Android testing</li><li>Fuzzing</li><li>Cloud systems</li>
+      </ul>
+    </section>
+  </section>
+
+  <section class="contact-overlay" id="contact-overlay" aria-labelledby="contact-title" hidden>
+    <div class="fallback-heading">
+      <p class="build-eyebrow">A little further down the street</p>
+      <h2 id="contact-title" tabindex="-1">Get in touch</h2>
+      <p>Let's talk about software engineering, AI agents, or new opportunities.</p>
+      <button class="overlay-close" type="button" data-overlay-close aria-label="Close contact panel">Close ×</button>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:tano.coppoletta@gmail.com"><span>Email</span><strong>tano.coppoletta@gmail.com</strong></a>
+      <a href="https://www.linkedin.com/in/gaetano-coppoletta/" target="_blank" rel="noopener noreferrer"><span>LinkedIn</span><strong>linkedin.com/in/gaetano-coppoletta</strong></a>
+      <a href="https://github.com/Tano-Coppoletta" target="_blank" rel="noopener noreferrer"><span>GitHub</span><strong>github.com/Tano-Coppoletta</strong></a>
+      <a href="/about/"><span>Text-first alternative</span><strong>Read the portfolio without the game</strong></a>
+    </div>
+  </section>
+
+  <div class="overlay-scrim" hidden></div>
+  <noscript>
+    <div style="position:fixed;inset:0;z-index:100;background:#211d18;color:#f5e7ce;padding:2rem;overflow:auto">
+      <h1>Gaetano Coppoletta — The Build Lab</h1>
+      <p>The interactive city needs JavaScript. Every portfolio detail remains available in the text-first portfolio.</p>
+      <p><a href="/about/" style="color:#ebbe93">About &amp; experience</a> · <a href="/projects/" style="color:#ebbe93">Projects</a> · <a href="mailto:tano.coppoletta@gmail.com" style="color:#ebbe93">Contact by email</a> · <a href="https://www.linkedin.com/in/gaetano-coppoletta/" style="color:#ebbe93">LinkedIn</a> · <a href="https://github.com/Tano-Coppoletta" style="color:#ebbe93">GitHub</a></p>
+    </div>
+  </noscript>
+
+</div>
+</Layout>
+
+<script src="../scripts/retroCity.js"></script>

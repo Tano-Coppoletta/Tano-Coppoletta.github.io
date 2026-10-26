@@ -5,7 +5,7 @@ export interface Props {
   image?: string;
 }
 
-const { title, description = "Software Developer focused on cybersecurity, building security automation and vulnerability intelligence tools.", image = "/images/gaetano.jpg" } = Astro.props;
+const { title, description = "Software engineer building AI-powered software and reliable systems. Security is part of how I build.", image = "/images/gaetano.jpg" } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 // Get base path from environment variables
@@ -44,7 +44,7 @@ const imagePath = `${basePath}/images/gaetano.jpg`;
     
     <!-- Additional Meta -->
     <meta name="author" content="Gaetano Coppoletta" />
-    <meta name="keywords" content="software developer, cybersecurity, vulnerability intelligence, security automation, OCPP, fuzzing" />
+    <meta name="keywords" content="software engineering, AI agents, AI systems, product engineering, applied security, vulnerability intelligence, OCPP, fuzzing" />
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,6 +70,7 @@ const imagePath = `${basePath}/images/gaetano.jpg`;
           <nav class="hidden md:block">
             <ul class="flex space-x-6">
               <li><a href="/" class="text-muted hover:text-text transition-colors" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Home</a></li>
+              <li><a href="/explore/" class="text-muted hover:text-text transition-colors" aria-current={Astro.url.pathname === '/explore/' ? 'page' : undefined}>Explore</a></li>
               <li><a href="/about/" class="text-muted hover:text-text transition-colors" aria-current={Astro.url.pathname === '/about/' ? 'page' : undefined}>About</a></li>
               <li><a href="/projects/" class="text-muted hover:text-text transition-colors" aria-current={Astro.url.pathname === '/projects/' ? 'page' : undefined}>Projects</a></li>
               <li><a href="/contact/" class="text-muted hover:text-text transition-colors" aria-current={Astro.url.pathname === '/contact/' ? 'page' : undefined}>Contact</a></li>
@@ -93,6 +94,7 @@ const imagePath = `${basePath}/images/gaetano.jpg`;
         <nav id="mobile-menu" class="mobile-menu hidden">
           <ul class="mobile-nav-list">
             <li><a href="/" class="mobile-nav-link" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Home</a></li>
+            <li><a href="/explore/" class="mobile-nav-link" aria-current={Astro.url.pathname === '/explore/' ? 'page' : undefined}>Explore the Build Lab</a></li>
             <li><a href="/about/" class="mobile-nav-link" aria-current={Astro.url.pathname === '/about/' ? 'page' : undefined}>About</a></li>
             <li><a href="/projects/" class="mobile-nav-link" aria-current={Astro.url.pathname === '/projects/' ? 'page' : undefined}>Projects</a></li>
             <li><a href="/contact/" class="mobile-nav-link" aria-current={Astro.url.pathname === '/contact/' ? 'page' : undefined}>Contact</a></li>

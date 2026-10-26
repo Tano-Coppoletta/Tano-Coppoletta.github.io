@@ -278,8 +278,8 @@ a:hover {
 }
 
 @media (min-width: 768px) {
-  .burger-menu-btn {
-    display: none;
+  .header .burger-menu-btn {
+    display: none !important;
   }
 }
 

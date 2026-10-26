@@ -1154,6 +1154,208 @@ body:has(.home-game-page) main { width: 100%; height: 100%; margin: 0; padding: 
   .build-map-card, .story-card, .portfolio-fallback { max-height: 78vh; }
 }
 
+/* Retro City: let the generated pixel panorama—not interface chrome—own the
+   viewport. The small floating HUD and landmark plaques stay out of its way. */
+.build-lab-page {
+  --lab-ink: #f5e8ff;
+  --lab-muted: #d2bedf;
+  --lab-paper: #241c3b;
+  --lab-line: #755487;
+  --lab-sage: #f5b45f;
+  --lab-sage-soft: #483255;
+  --lab-coral: #ff8178;
+  background: #211a37;
+}
+
+.build-scene-card,
+.build-scene-wrap { background: #211a37; }
+
+.build-scene-topbar {
+  z-index: 4;
+  justify-content: flex-start;
+  padding: .75rem 1.15rem;
+  color: #fff0d2;
+  font-size: .58rem;
+  text-shadow: 0 1px 7px #1d1534;
+  pointer-events: none;
+}
+
+.build-scene-topbar > span:first-child {
+  display: inline-flex;
+  align-items: center;
+}
+
+.live-dot {
+  background: #ff9d70;
+  box-shadow: 0 0 10px rgba(255, 157, 112, .65);
+}
+
+.build-scene-wrap { touch-action: none; }
+#build-scene { cursor: crosshair; touch-action: none; }
+
+.scene-label {
+  z-index: 5;
+  padding: .4rem .56rem;
+  border: 1px solid rgba(255, 202, 131, .78);
+  border-radius: 2px;
+  background: rgba(37, 27, 53, .91);
+  color: #fff0d2;
+  font: 600 .58rem 'IBM Plex Mono', ui-monospace, monospace;
+  letter-spacing: .07em;
+  box-shadow: 0 2px 10px rgba(18, 12, 35, .4);
+}
+
+.scene-label:hover,
+.scene-label:focus-visible {
+  border-color: #fff0c1;
+  background: #7a4269;
+}
+.scene-label span { color: #ffbe69; }
+
+.scene-status {
+  z-index: 4;
+  bottom: 1rem;
+  border: 1px solid rgba(255, 201, 136, .4);
+  background: rgba(34, 25, 52, .88);
+  color: #fff0d2;
+}
+
+.game-hud {
+  top: .8rem;
+  left: auto;
+  right: .9rem;
+  gap: .35rem;
+  padding: .28rem .38rem;
+  border-color: rgba(242, 185, 133, .4);
+  background: rgba(34, 25, 52, .9);
+  color: #f8e9d0;
+  box-shadow: 0 3px 15px rgba(20, 13, 36, .34);
+}
+
+.hud-brand { color: #ffc66f; }
+.hud-brand span { color: #ead9ec; }
+.hud-actions button,
+.hud-actions a { color: #f8e9d0; }
+.hud-actions button:hover,
+.hud-actions a:hover { border-color: #f2a06f; color: #ffd28a; }
+.hud-actions kbd { color: #ffba70; }
+
+.build-map-card,
+.story-card,
+.portfolio-fallback,
+.contact-overlay {
+  z-index: 30;
+  border: 1px solid #9d6d83;
+  border-radius: 3px;
+  background: rgba(39, 29, 57, .98);
+  color: #f5e8ff;
+  box-shadow: 0 24px 90px rgba(14, 9, 27, .7);
+}
+
+.build-map-card { padding: 1.25rem; }
+.map-card-heading h2,
+.story-pane h2,
+.fallback-heading h2 { color: #fff0d2; }
+.map-compass { border-color: #755487; color: #e1c5d2; }
+.portal-button { border-color: #63466f; color: #f5e8ff; }
+.portal-button small { color: #d2bedf; }
+.portal-button.is-active { border-color: #f3b86a; background: #493451; }
+.portal-number { border-color: #795784; color: #ffbd73; }
+.map-card-footer { color: #d7c2db; }
+.map-marker { background: #ff987c; }
+.story-card { padding: clamp(1.1rem, 3vw, 1.9rem); }
+.story-card .build-eyebrow,
+.story-tag,
+.work-card > span { color: #f7bd76; }
+.story-lede,
+.story-points,
+.work-card p { color: #e3d2e7; }
+.work-card { border-color: #715079; background: #302541; }
+.story-mark { border-color: #68547a; background: #45334f; color: #a9f2e8; }
+.story-mark-coral { border-color: #a65c72; background: #512c48; color: #ff9c87; }
+.story-mark-teal { border-color: #4d7778; background: #293d50; color: #9ce5db; }
+.story-actions a,
+.career-support-card a { color: #ffd08a; }
+.story-actions button,
+.overlay-close { border-color: #755487; background: #302441; color: #f5e8ff; }
+.overlay-close:hover { border-color: #f5b45f; color: #ffd08a; }
+.career-entry,
+.career-support-card,
+.skills-strip { border-color: #715079; background: #302541; }
+.career-entry h3,
+.career-support-card h3,
+.skills-strip h3 { color: #f8e9d0; }
+.career-date,
+.career-entry-featured { color: #f5bf72; }
+.career-entry-featured { border-left-color: #ff987c; }
+.career-entry p,
+.career-support-card ul,
+.career-support-card p:not(.build-eyebrow) { color: #e3d2e7; }
+.skills-strip li { border-color: #70527a; background: #29203e; color: #e3d2e7; }
+.portfolio-fallback { padding: clamp(1rem, 3vw, 1.8rem); }
+.portfolio-fallback[hidden],
+.contact-overlay[hidden] { display: none !important; }
+
+.contact-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(580px, calc(100vw - 2rem));
+  max-height: min(82vh, 720px);
+  overflow: auto;
+  padding: clamp(1.1rem, 3vw, 1.8rem);
+  transform: translate(-50%, -50%);
+}
+
+.contact-links {
+  display: grid;
+  gap: .55rem;
+  margin-top: 1.1rem;
+}
+
+.contact-links a {
+  display: grid;
+  gap: .2rem;
+  padding: .75rem .85rem;
+  border: 1px solid #70527a;
+  background: #302541;
+  color: #fff0d2;
+  text-decoration: none;
+}
+.contact-links a:hover { border-color: #f5b45f; background: #493451; }
+.contact-links span {
+  color: #ffbd73;
+  font: 600 .58rem 'IBM Plex Mono', ui-monospace, monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.contact-links strong { overflow-wrap: anywhere; font-size: .84rem; }
+
+.overlay-scrim { z-index: 25; background: rgba(17, 11, 30, .67); }
+.touch-pad { display: none; }
+.build-lab-page :focus-visible { outline-color: #ffe29b; }
+
+@media (max-width: 700px) {
+  .game-hud {
+    top: .5rem;
+    left: .5rem;
+    right: .5rem;
+    justify-content: space-between;
+    gap: .1rem;
+    padding: .2rem;
+  }
+  .hud-brand { min-width: 24px; justify-content: center; }
+  .hud-actions button { padding: .34rem .42rem; font-size: .58rem; }
+  .build-scene-topbar { top: 3.35rem; padding: .5rem .75rem; font-size: .52rem; }
+  .keyboard-hint { display: none; }
+  .scene-label { max-width: 44vw; padding: .35rem .42rem; font-size: .5rem; }
+  .scene-status { bottom: .65rem; font-size: .6rem; }
+  .build-map-card,
+  .story-card,
+  .portfolio-fallback,
+  .contact-overlay { max-height: min(78dvh, 760px); }
+}
+
 /* Art-pass finish: dark cutaway stage, warm masonry palette, and real
    world-projected exhibit markers. On narrow screens the room is deliberately
    framed closer; drag the canvas to pan across the full workshop. */
@@ -1213,4 +1415,37 @@ body:has(.home-game-page) main { width: 100%; height: 100%; margin: 0; padding: 
   background: #30231b;
   color: #f5e7ce;
   text-align: center;
+}
+
+/* Final scene overrides after legacy room styling above. */
+.story-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin: 1rem 0 1.3rem;
+}
+.story-tabs button {
+  min-height: 36px;
+  padding: .4rem .65rem;
+  border: 1px solid #755487;
+  background: #302441;
+  color: #ead9ec;
+  font: 600 .7rem 'IBM Plex Mono', ui-monospace, monospace;
+  cursor: pointer;
+}
+.story-tabs button.is-active {
+  border-color: #f3b86a;
+  color: #ffd28a;
+  background: #493451;
+}
+.scene-label[hidden] { display: none !important; }
+.build-scene-topbar {
+  justify-content: flex-start;
+  pointer-events: none;
+}
+.build-scene-topbar > span:first-child { display: inline-flex; }
+#build-scene { cursor: crosshair; }
+
+@media (max-width: 700px) {
+  .build-scene-topbar::after { content: none; }
 }

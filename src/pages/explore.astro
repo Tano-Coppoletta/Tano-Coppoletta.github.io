@@ -4,8 +4,8 @@ import '../styles/build-lab.css';
 ---
 
 <Layout
-  title="The Build Lab | Gaetano Coppoletta"
-  description="Explore Gaetano Coppoletta's interactive workshop: AI systems, product engineering, research, and leadership, with accessible text alternatives."
+  title="Retro City | Gaetano Coppoletta"
+  description="Explore a pixel-art San Francisco with a robot dog. Discover Gaetano Coppoletta's software engineering, AI systems, research, and leadership."
 >
 <div class="build-lab-page">
   <section class="build-intro" aria-labelledby="build-title">
@@ -24,27 +24,26 @@ import '../styles/build-lab.css';
     </nav>
   </section>
 
-  <section class="build-world-section" id="workshop" aria-label="Interactive portfolio workshop">
+  <section class="build-world-section" id="workshop" aria-label="Interactive portfolio city">
     <div class="build-world-grid">
       <div class="build-scene-card">
         <div class="build-scene-topbar">
-          <span><span class="live-dot" aria-hidden="true"></span> THE BUILD LAB <span class="topbar-divider">/</span> VOXEL WORKSHOP</span>
-          <span class="keyboard-hint">FOCUS SCENE · MOVE <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> OR ARROWS · OPEN <kbd>ENTER</kbd></span>
+          <span><span class="live-dot" aria-hidden="true"></span> RETRO CITY <span class="topbar-divider">/</span> SAN FRANCISCO · 198X</span>
+          <span class="keyboard-hint">WALK <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> · INTERACT <kbd>E</kbd></span>
         </div>
         <div class="build-scene-wrap">
           <canvas
             id="build-scene"
-            aria-label="Isometric workshop with four portfolio exhibits. Focus this scene to move with WASD or arrow keys. Select a map destination to open its story."
+            aria-label="Pixel-art San Francisco at sunset. A robot dog can walk the streets; use the map to open portfolio stories."
             role="img"
             tabindex="0"
           ></canvas>
-          <button class="scene-label scene-label-ai" type="button" data-stop="agents"><span>01</span> AGENT WORKBENCH</button>
-          <button class="scene-label scene-label-product" type="button" data-stop="product"><span>02</span> PRODUCT STUDIO</button>
-          <button class="scene-label scene-label-engineering" type="button" data-stop="engineering"><span>03</span> ENGINEERING &amp; RESEARCH</button>
-          <button class="scene-label scene-label-community" type="button" data-stop="community"><span>04</span> COMMUNITY</button>
-          <div id="scene-status" class="scene-status" role="status" aria-live="polite">Focus the workshop to move, or select a workbench to explore.</div>
+          <button class="scene-label scene-label-ai" type="button" data-stop="agents" data-gate="projects">PROJECTS</button>
+          <button class="scene-label scene-label-product" type="button" data-overlay="career" data-gate="about">ABOUT</button>
+          <button class="scene-label scene-label-contact" type="button" data-overlay="contact" data-gate="contact">CONTACT</button>
+          <div id="scene-status" class="scene-status" role="status" aria-live="polite">Click the street to walk · WASD or arrows · E to enter · Map for direct access</div>
           <div id="webgl-fallback" class="webgl-fallback" hidden>
-            The 3D scene is unavailable in this browser. Use the map and career-path panels to reach every portfolio detail.
+            The city artwork could not be loaded. Open the map or career path to explore every portfolio detail.
           </div>
         </div>
         <div class="touch-pad" role="group" aria-label="Touch movement controls">
@@ -54,8 +53,8 @@ import '../styles/build-lab.css';
           <button type="button" data-move="right" aria-label="Move right">→</button>
         </div>
         <div class="build-scene-bottom">
-          <span>PORTRAIT-BASED PIXEL AVATAR</span>
-          <span>OPTIONAL · NO LOGIN · NO DATA COLLECTED</span>
+          <span>ROBOT DOG · STREET EXPLORER</span>
+          <span>NO LOGIN · NO DATA COLLECTED</span>
         </div>
       </div>
 
@@ -63,7 +62,7 @@ import '../styles/build-lab.css';
         <div class="map-card-heading">
           <div>
             <p class="build-eyebrow">Four exhibits · one short visit</p>
-            <h2 tabindex="-1">Pick a workbench</h2>
+            <h2 tabindex="-1">Explore the city</h2>
           </div>
           <span class="map-compass" aria-hidden="true">N<br />↑</span>
           <button class="overlay-close" type="button" data-overlay-close aria-label="Close workshop map">×</button>
@@ -101,10 +100,16 @@ import '../styles/build-lab.css';
       <div class="story-card-topline">
         <span id="story-kicker" class="build-eyebrow">01 / AI systems</span>
         <div class="story-actions">
-          <a href="#career-path">Career Path <span aria-hidden="true">↓</span></a>
-          <button id="close-story-panel" type="button" aria-label="Close selected story">Close <span aria-hidden="true">×</span></button>
+          <button type="button" data-overlay="career">Career Path <span aria-hidden="true">↓</span></button>
+          <button id="close-story-panel" type="button" data-overlay-close aria-label="Close selected story">Close <span aria-hidden="true">×</span></button>
         </div>
       </div>
+      <nav class="story-tabs" aria-label="Portfolio stories">
+        <button type="button" data-stop="agents">AI systems</button>
+        <button type="button" data-stop="product">Product</button>
+        <button type="button" data-stop="engineering">Engineering</button>
+        <button type="button" data-stop="community">Leadership</button>
+      </nav>
 
       <article class="story-pane" data-pane="agents">
         <div class="story-heading-row">
@@ -164,12 +169,11 @@ import '../styles/build-lab.css';
   </section>
 
   <nav class="game-hud" aria-label="Workshop controls">
-    <a class="hud-brand" href="/" aria-label="Gaetano Coppoletta home">GC <span>BUILD LAB</span></a>
+    <a class="hud-brand" href="/" aria-label="Gaetano Coppoletta home">GC <span>RETRO CITY</span></a>
     <div class="hud-actions">
       <button type="button" data-overlay="map">MAP <kbd>M</kbd></button>
       <button type="button" data-overlay="career">CAREER PATH</button>
-      <a href="/about/">ABOUT</a>
-      <a href="/contact/">CONTACT</a>
+      <button type="button" data-overlay="contact">CONTACT</button>
     </div>
   </nav>
 
@@ -237,26 +241,31 @@ import '../styles/build-lab.css';
     </section>
   </section>
 
+  <section class="contact-overlay" id="contact-overlay" aria-labelledby="contact-title" hidden>
+    <div class="fallback-heading">
+      <p class="build-eyebrow">A little further down the street</p>
+      <h2 id="contact-title" tabindex="-1">Get in touch</h2>
+      <p>Let's talk about software engineering, AI agents, or new opportunities.</p>
+      <button class="overlay-close" type="button" data-overlay-close aria-label="Close contact panel">Close ×</button>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:tano.coppoletta@gmail.com"><span>Email</span><strong>tano.coppoletta@gmail.com</strong></a>
+      <a href="https://www.linkedin.com/in/gaetano-coppoletta/" target="_blank" rel="noopener noreferrer"><span>LinkedIn</span><strong>linkedin.com/in/gaetano-coppoletta</strong></a>
+      <a href="https://github.com/Tano-Coppoletta" target="_blank" rel="noopener noreferrer"><span>GitHub</span><strong>github.com/Tano-Coppoletta</strong></a>
+      <a href="/about/"><span>Text-first alternative</span><strong>Read the portfolio without the game</strong></a>
+    </div>
+  </section>
+
   <div class="overlay-scrim" hidden></div>
   <noscript>
     <div style="position:fixed;inset:0;z-index:100;background:#211d18;color:#f5e7ce;padding:2rem;overflow:auto">
       <h1>Gaetano Coppoletta — The Build Lab</h1>
-      <p>The interactive workshop needs JavaScript. Every portfolio detail is also available in the text-first portfolio.</p>
-      <p><a href="/about/" style="color:#ebbe93">About &amp; experience</a> · <a href="/projects/" style="color:#ebbe93">Projects</a> · <a href="/contact/" style="color:#ebbe93">Contact</a></p>
+      <p>The interactive city needs JavaScript. Every portfolio detail remains available in the text-first portfolio.</p>
+      <p><a href="/about/" style="color:#ebbe93">About &amp; experience</a> · <a href="/projects/" style="color:#ebbe93">Projects</a> · <a href="mailto:tano.coppoletta@gmail.com" style="color:#ebbe93">Contact by email</a> · <a href="https://www.linkedin.com/in/gaetano-coppoletta/" style="color:#ebbe93">LinkedIn</a> · <a href="https://github.com/Tano-Coppoletta" style="color:#ebbe93">GitHub</a></p>
     </div>
   </noscript>
 
-  <section class="build-endcap" aria-label="More portfolio links">
-    <p>Prefer the conventional route?</p>
-    <div>
-      <a href="/about/">About &amp; experience</a>
-      <a href="/projects/">Projects</a>
-      <a href="/contact/">Contact</a>
-      <a href="https://www.linkedin.com/in/gaetano-coppoletta/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-      <a href="https://github.com/Tano-Coppoletta" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-    </div>
-  </section>
 </div>
 </Layout>
 
-<script src="../scripts/buildLab.js"></script>
+<script src="../scripts/retroCity.js"></script>

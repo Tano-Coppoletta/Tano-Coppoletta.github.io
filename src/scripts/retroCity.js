@@ -1,7 +1,11 @@
+import { createTanoAvatar } from './tanoAvatar.js';
+
 /* Retro City scene calibration. All points are normalized to the source image
    (0..1); tune WALKABLE_POLYGON and landmarks after the final city art lands. */
 const SCENE = {
   image: '/images/retro-city.webp',
+  playerRadius: 0.008,
+  moveSpeed: 0.15,
   // The playable avenue follows the clear pavement diagonal; excluded props
   // below keep pathfinding off the trolley, lamp, mailbox, and parked car.
   walkablePolygon: [
@@ -45,13 +49,15 @@ const stopButtons = [...document.querySelectorAll('[data-stop]')];
 const overlayButtons = [...document.querySelectorAll('[data-overlay]')];
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const image = new Image();
-const player = { x: SCENE.start[0], y: SCENE.start[1], facing: 1, moving: false };
+const player = { x: SCENE.start[0], y: SCENE.start[1], heading: 0, targetHeading: 0, moving: false };
+const avatar = createTanoAvatar();
 const heldKeys = new Set();
 const pixelRatio = () => Math.min(window.devicePixelRatio || 1, 2);
 let imageReady = false;
 let frameHandle = 0;
+let idleTimer = 0;
 let lastTime = 0;
-let walkTime = 0;
+let interactionUntil = 0;
 let view = { width: 1, height: 1, scale: 1, cameraX: 0, cameraY: 0, mobile: false };
 let panOrigin = null;
 let activeDialog = null;
@@ -65,7 +71,7 @@ function setStatus(message) {
   if (status && status.textContent !== message) status.textContent = message;
 }
 
-function pointInPolygon(x, y) {
+function isGroundPoint(x, y) {
   const polygon = SCENE.walkablePolygon;
   let inside = false;
   for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
@@ -78,6 +84,16 @@ function pointInPolygon(x, y) {
     if (area.type === 'rect') return x >= area.x1 && x <= area.x2 && y >= area.y1 && y <= area.y2;
     return Math.hypot(x - area.x, y - area.y) < area.radius;
   });
+}
+
+function pointInPolygon(x, y) {
+  if (!isGroundPoint(x, y)) return false;
+  // Footprint clearance, not just a point: Tano cannot graze prop corners.
+  for (let i = 0; i < 8; i += 1) {
+    const angle = i * Math.PI / 4;
+    if (!isGroundPoint(x + Math.cos(angle) * SCENE.playerRadius, y + Math.sin(angle) * SCENE.playerRadius)) return false;
+  }
+  return true;
 }
 
 function imagePointToScreen(x, y) {
@@ -135,57 +151,35 @@ function positionLandmarks() {
   }
 }
 
-function drawPixelDog(time) {
+function drawTano(time) {
   if (!context || !imageReady) return;
+  if (!avatar.available) {
+    if (fallback) {
+      fallback.hidden = false;
+      fallback.textContent = 'The 3D character is unavailable in this browser. You can still explore every portfolio story through the map.';
+    }
+    return;
+  }
   const x = player.x * image.naturalWidth;
   const y = player.y * image.naturalHeight;
   const screen = imagePointToScreen(x, y);
   const depth = 0.78 + player.y * 0.45;
-  const unit = view.scale * depth;
-  const step = player.moving && !reducedMotion.matches ? Math.sin(time / 75) : 0;
+  const height = 100 * view.scale * depth;
+  const width = height * avatar.canvas.width / avatar.canvas.height;
+  avatar.render({
+    time,
+    moving: player.moving,
+    heading: player.heading,
+    interacting: time < interactionUntil,
+    reducedMotion: reducedMotion.matches,
+  });
   context.save();
-  context.translate(Math.round(screen.x), Math.round(screen.y));
-  context.scale(unit * player.facing, unit);
+  context.fillStyle = 'rgba(24,17,42,.38)';
+  context.beginPath();
+  context.ellipse(screen.x, screen.y + 2 * view.scale, 15 * depth * view.scale, 4 * depth * view.scale, -0.12, 0, Math.PI * 2);
+  context.fill();
   context.imageSmoothingEnabled = false;
-  const pixel = (px, py, w, h, color) => {
-    context.fillStyle = color;
-    context.fillRect(Math.round(px), Math.round(py), Math.ceil(w), Math.ceil(h));
-  };
-  // A low, four-legged mechanical dog: articulated legs, muzzle, ears and tail.
-  pixel(-15, 8, 28, 5, 'rgba(20,17,35,.38)');
-  pixel(-11, -9, 18, 10, '#29324d');
-  pixel(-8, -12, 12, 7, '#71839a');
-  pixel(-13, -8, 6, 7, '#53647c');
-  pixel(5, -8, 8, 6, '#53647c');
-  pixel(10, -8, 7, 5, '#9ba9b4');
-  pixel(14, -6, 5, 3, '#d8bd9b');
-  pixel(17, -5, 3, 2, '#26314b');
-  pixel(8, -7, 6, 2, '#67e5df');
-  pixel(10, -7, 2, 1, '#e0ffff');
-  pixel(5, -14, 4, 7, '#3d4764');
-  pixel(6, -15, 2, 3, '#b3bbc0');
-  pixel(9, -13, 3, 5, '#3d4764');
-  pixel(10, -12, 2, 3, '#ef8e83');
-  pixel(-14, -11, 4, 5, '#39435f');
-  pixel(-16, -14, 3, 5, '#596b84');
-  pixel(-18, -17, 2, 6, '#79889b');
-  pixel(-7, -6, 8, 2, '#a9b8c0');
-  pixel(-5, -3, 3, 3, '#67e5df');
-  pixel(4, -3, 3, 3, '#67e5df');
-  pixel(-10, 0, 3, 3, '#d3a66b');
-  pixel(-4, 0, 3, 3, '#d3a66b');
-  pixel(2, 0, 3, 3, '#d3a66b');
-  pixel(7, 0, 3, 3, '#d3a66b');
-  const frontLift = Math.round(step * 2);
-  const backLift = Math.round(-step * 2);
-  pixel(-9, 1 + frontLift, 4, 7 - frontLift, '#75869a');
-  pixel(-7, 7 + frontLift, 5, 2, '#d9c39f');
-  pixel(3, 1 + backLift, 4, 7 - backLift, '#75869a');
-  pixel(4, 7 + backLift, 5, 2, '#d9c39f');
-  pixel(-15, 1 + backLift, 4, 7 - backLift, '#53647c');
-  pixel(-15, 7 + backLift, 5, 2, '#d9c39f');
-  pixel(9, 1 + frontLift, 4, 7 - frontLift, '#53647c');
-  pixel(9, 7 + frontLift, 5, 2, '#d9c39f');
+  context.drawImage(avatar.canvas, Math.round(screen.x - width / 2), Math.round(screen.y - height * avatar.groundAnchorY), Math.round(width), Math.round(height));
   context.restore();
 }
 
@@ -200,7 +194,7 @@ function draw(time = 0) {
     const topLeft = imagePointToScreen(0, 0);
     context.imageSmoothingEnabled = false;
     context.drawImage(image, topLeft.x, topLeft.y, imageWidth * view.scale, imageHeight * view.scale);
-    drawPixelDog(time);
+    drawTano(time);
   } else {
     context.fillStyle = '#261d3e';
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -317,6 +311,8 @@ function setDialog(panel, trigger) {
   heldKeys.clear();
   currentPath = [];
   player.moving = false;
+  interactionUntil = performance.now() + 1000;
+  startAnimation();
   const focusTarget = panel === storyPanel
     ? panel.querySelector('.story-pane:not([hidden]) h2')
     : panel?.querySelector('h2, button, a');
@@ -479,32 +475,49 @@ document.querySelectorAll('[data-move]').forEach((button) => {
 function animate(time) {
   const elapsed = Math.min((time - lastTime) / 1000 || 0, 0.05);
   lastTime = time;
+  player.moving = false;
   if (heldKeys.size) {
     let dx = Number(heldKeys.has('d') || heldKeys.has('arrowright')) - Number(heldKeys.has('a') || heldKeys.has('arrowleft'));
     let dy = Number(heldKeys.has('s') || heldKeys.has('arrowdown')) - Number(heldKeys.has('w') || heldKeys.has('arrowup'));
     if (dx || dy) {
       const magnitude = Math.hypot(dx, dy);
-      dx = dx / magnitude * elapsed * 0.24;
-      dy = dy / magnitude * elapsed * 0.24;
+      dx = dx / magnitude * elapsed * SCENE.moveSpeed;
+      dy = dy / magnitude * elapsed * SCENE.moveSpeed;
+      const previousX = player.x, previousY = player.y;
       const nx = player.x + dx, ny = player.y + dy;
+      currentPath = [];
       if (pointInPolygon(nx, ny)) {
-        player.x = nx; player.y = ny; player.facing = dx ? Math.sign(dx) : player.facing;
-        player.moving = true; currentPath = [];
-      } else setStatus('The dog stays on walkable streets. Use the map for a direct visit.');
+        player.x = nx; player.y = ny;
+      } else {
+        if (pointInPolygon(nx, player.y)) player.x = nx;
+        if (pointInPolygon(player.x, ny)) player.y = ny;
+      }
+      const movedX = player.x - previousX, movedY = player.y - previousY;
+      player.moving = Math.hypot(movedX, movedY) > 0.00001;
+      if (player.moving) player.targetHeading = Math.atan2(movedX, movedY);
+      else setStatus('Tano stays on the street. Choose a clear route, or open the map.');
     }
   } else if (pathIndex < currentPath.length) {
     const [tx, ty] = currentPath[pathIndex];
     const dx = tx - player.x, dy = ty - player.y;
     const distance = Math.hypot(dx, dy);
-    const travel = elapsed * 0.21;
+    const travel = elapsed * SCENE.moveSpeed;
     if (distance <= travel + 0.001) {
       player.x = tx; player.y = ty; pathIndex += 1;
     } else {
-      player.x += dx / distance * travel; player.y += dy / distance * travel;
+      const nx = player.x + dx / distance * travel, ny = player.y + dy / distance * travel;
+      if (pointInPolygon(nx, ny)) {
+        player.x = nx; player.y = ny;
+      } else {
+        currentPath = [];
+        setStatus('That route is too close to an obstacle. Choose a clearer part of the street.');
+      }
     }
-    if (dx) player.facing = Math.sign(dx);
-    player.moving = true;
+    if (Math.hypot(dx, dy) > 0.00001) player.targetHeading = Math.atan2(dx, dy);
+    player.moving = currentPath.length > 0;
   } else player.moving = false;
+  const headingDelta = Math.atan2(Math.sin(player.targetHeading - player.heading), Math.cos(player.targetHeading - player.heading));
+  player.heading += reducedMotion.matches ? headingDelta : headingDelta * Math.min(1, elapsed * 14);
   if (view.mobile && !panOrigin && !panPinned) {
     const iw = imageReady ? image.naturalWidth : 1200;
     const ih = imageReady ? image.naturalHeight : 640;
@@ -516,13 +529,20 @@ function animate(time) {
     view.cameraX = Math.max(iw - maxX, Math.min(maxX, view.cameraX));
     view.cameraY = Math.max(ih - maxY, Math.min(maxY, view.cameraY));
   }
-  if (player.moving) walkTime += elapsed;
   draw(time);
   if (player.moving && pathIndex >= currentPath.length && !heldKeys.size) player.moving = false;
-  if (player.moving || heldKeys.size) frameHandle = requestAnimationFrame(animate);
+  if (player.moving || heldKeys.size || Math.abs(headingDelta) > 0.01 || (time < interactionUntil && !reducedMotion.matches)) {
+    frameHandle = requestAnimationFrame(animate);
+  } else if (!reducedMotion.matches && avatar.available && !document.hidden) {
+    idleTimer = window.setTimeout(startAnimation, 120);
+  } else if (time < interactionUntil) {
+    idleTimer = window.setTimeout(startAnimation, interactionUntil - time + 1);
+  }
 }
 
 function startAnimation() {
+  window.clearTimeout(idleTimer);
+  if (document.hidden) return;
   if (!frameHandle) frameHandle = requestAnimationFrame(animate);
 }
 
@@ -531,7 +551,10 @@ if (canvas && context) {
     imageReady = image.naturalWidth > 0 && image.naturalHeight > 0;
     if (!imageReady) return;
     updateView();
-    if (fallback) fallback.hidden = true;
+    if (fallback) {
+      fallback.hidden = avatar.available;
+      if (!avatar.available) fallback.textContent = 'The 3D character is unavailable in this browser. You can still explore every portfolio story through the map.';
+    }
     requestDraw();
     startAnimation();
   };
@@ -547,4 +570,23 @@ if (canvas && context) {
   startAnimation();
   canvas.addEventListener('blur', () => heldKeys.clear());
   window.addEventListener('resize', () => { updateView(); requestDraw(); }, { passive: true });
+  reducedMotion.addEventListener('change', startAnimation);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      cancelAnimationFrame(frameHandle);
+      frameHandle = 0;
+      window.clearTimeout(idleTimer);
+      heldKeys.clear();
+    } else {
+      lastTime = performance.now();
+      startAnimation();
+    }
+  });
+  window.addEventListener('pagehide', (event) => {
+    cancelAnimationFrame(frameHandle);
+    window.clearTimeout(idleTimer);
+    frameHandle = 0;
+    if (!event.persisted) avatar.dispose();
+  });
+  window.addEventListener('pageshow', (event) => { if (event.persisted) startAnimation(); });
 }

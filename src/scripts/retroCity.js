@@ -316,6 +316,7 @@ function setDialog(panel, trigger) {
   const focusTarget = panel === storyPanel
     ? panel.querySelector('.story-pane:not([hidden]) h2')
     : panel?.querySelector('h2, button, a');
+  focusTarget?.focus({ preventScroll: true });
   requestAnimationFrame(() => focusTarget?.focus({ preventScroll: true }));
 }
 
@@ -405,6 +406,7 @@ function handleKeyboard(event) {
     startAnimation();
   }
   if ((key === 'enter' || key === 'e') && !event.repeat) {
+    event.preventDefault();
     const nearest = nearestLandmark();
     if (nearest === 'contact' || nearest === 'career') openOverlay(nearest, canvas);
     else if (nearest) openStory(nearest, canvas);

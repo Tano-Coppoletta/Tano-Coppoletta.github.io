@@ -5,7 +5,7 @@ import '../styles/build-lab.css';
 
 <Layout
   title="The Build Lab | Gaetano Coppoletta"
-  description="An optional, text-accessible portfolio workshop featuring AI systems, product engineering, research, and leadership."
+  description="Explore Gaetano Coppoletta's interactive workshop: AI systems, product engineering, research, and leadership, with accessible text alternatives."
 >
 <div class="build-lab-page">
   <section class="build-intro" aria-labelledby="build-title">
@@ -38,13 +38,13 @@ import '../styles/build-lab.css';
             role="img"
             tabindex="0"
           ></canvas>
-          <div class="scene-label scene-label-ai" aria-hidden="true"><span>01</span> AGENT WORKBENCH</div>
-          <div class="scene-label scene-label-product" aria-hidden="true"><span>02</span> PRODUCT STUDIO</div>
-          <div class="scene-label scene-label-engineering" aria-hidden="true"><span>03</span> ENGINEERING &amp; RESEARCH</div>
-          <div class="scene-label scene-label-community" aria-hidden="true"><span>04</span> COMMUNITY</div>
-          <div id="scene-status" class="scene-status" role="status" aria-live="polite">Agent Workbench is open below. Choose a map destination or focus the scene to explore.</div>
+          <button class="scene-label scene-label-ai" type="button" data-stop="agents"><span>01</span> AGENT WORKBENCH</button>
+          <button class="scene-label scene-label-product" type="button" data-stop="product"><span>02</span> PRODUCT STUDIO</button>
+          <button class="scene-label scene-label-engineering" type="button" data-stop="engineering"><span>03</span> ENGINEERING &amp; RESEARCH</button>
+          <button class="scene-label scene-label-community" type="button" data-stop="community"><span>04</span> COMMUNITY</button>
+          <div id="scene-status" class="scene-status" role="status" aria-live="polite">Focus the workshop to move, or select a workbench to explore.</div>
           <div id="webgl-fallback" class="webgl-fallback" hidden>
-            The 3D scene is unavailable in this browser. The map, career path, and all portfolio details below still work.
+            The 3D scene is unavailable in this browser. Use the map and career-path panels to reach every portfolio detail.
           </div>
         </div>
         <div class="touch-pad" role="group" aria-label="Touch movement controls">
@@ -59,13 +59,14 @@ import '../styles/build-lab.css';
         </div>
       </div>
 
-      <aside class="build-map-card" aria-label="Workshop map">
+      <aside class="build-map-card" id="workshop-map" aria-label="Workshop map" hidden>
         <div class="map-card-heading">
           <div>
             <p class="build-eyebrow">Four exhibits · one short visit</p>
-            <h2>Pick a workbench</h2>
+            <h2 tabindex="-1">Pick a workbench</h2>
           </div>
           <span class="map-compass" aria-hidden="true">N<br />↑</span>
+          <button class="overlay-close" type="button" data-overlay-close aria-label="Close workshop map">×</button>
         </div>
         <div class="portal-list" role="group" aria-label="Portfolio destinations">
           <button class="portal-button is-active" type="button" data-stop="agents" aria-pressed="true" aria-controls="story-panel">
@@ -96,7 +97,7 @@ import '../styles/build-lab.css';
       </aside>
     </div>
 
-    <section class="story-card" id="story-panel" aria-label="Selected portfolio story" aria-live="polite" aria-atomic="false">
+    <section class="story-card" id="story-panel" aria-label="Selected portfolio story" aria-live="polite" aria-atomic="false" hidden>
       <div class="story-card-topline">
         <span id="story-kicker" class="build-eyebrow">01 / AI systems</span>
         <div class="story-actions">
@@ -162,11 +163,22 @@ import '../styles/build-lab.css';
     </section>
   </section>
 
-  <section class="portfolio-fallback" aria-labelledby="career-path">
+  <nav class="game-hud" aria-label="Workshop controls">
+    <a class="hud-brand" href="/" aria-label="Gaetano Coppoletta home">GC <span>BUILD LAB</span></a>
+    <div class="hud-actions">
+      <button type="button" data-overlay="map">MAP <kbd>M</kbd></button>
+      <button type="button" data-overlay="career">CAREER PATH</button>
+      <a href="/about/">ABOUT</a>
+      <a href="/contact/">CONTACT</a>
+    </div>
+  </nav>
+
+  <section class="portfolio-fallback" id="career-overlay" aria-labelledby="career-path" hidden>
     <div class="fallback-heading">
       <p class="build-eyebrow">Text-first · always available</p>
-      <h2 id="career-path">Career Path</h2>
+      <h2 id="career-path" tabindex="-1">Career Path</h2>
       <p>Five roles, the work behind them, and the education that shaped how I build. No movement or 3D required.</p>
+      <button class="overlay-close" type="button" data-overlay-close aria-label="Close career path">Close ×</button>
     </div>
     <ol class="career-list">
       <li class="career-entry career-entry-featured">
@@ -224,6 +236,15 @@ import '../styles/build-lab.css';
       </ul>
     </section>
   </section>
+
+  <div class="overlay-scrim" hidden></div>
+  <noscript>
+    <div style="position:fixed;inset:0;z-index:100;background:#211d18;color:#f5e7ce;padding:2rem;overflow:auto">
+      <h1>Gaetano Coppoletta — The Build Lab</h1>
+      <p>The interactive workshop needs JavaScript. Every portfolio detail is also available in the text-first portfolio.</p>
+      <p><a href="/about/" style="color:#ebbe93">About &amp; experience</a> · <a href="/projects/" style="color:#ebbe93">Projects</a> · <a href="/contact/" style="color:#ebbe93">Contact</a></p>
+    </div>
+  </noscript>
 
   <section class="build-endcap" aria-label="More portfolio links">
     <p>Prefer the conventional route?</p>

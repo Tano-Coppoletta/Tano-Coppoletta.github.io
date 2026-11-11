@@ -1,190 +1,269 @@
 ---
+// Layout follows the Claude Design file "Portfolio.dc.html" (design-export/, not committed).
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import ProjectVisual from '../components/ProjectVisual.astro';
 import portrait from '../assets/gaetano-portrait.jpg';
-import { person, facts, about, experience, research, education, skills } from '../data/profile';
+import {
+  person,
+  route,
+  stats,
+  work,
+  experience,
+  community,
+  about,
+  education,
+  publication,
+  cves,
+  toolkit,
+} from '../data/profile';
 
-const sections = [
-  { id: 'about', label: 'About' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'research', label: 'Research' },
-  { id: 'education', label: 'Education' },
-  { id: 'skills', label: 'Skills' },
-  { id: 'contact', label: 'Contact' },
-];
+const [feature, ...pair] = work;
+const year = new Date().getFullYear();
 ---
 
 <Layout title={`${person.name}, Software Engineer`} description={person.description}>
-  <header class="top">
+  <nav class="top" aria-label="Main" data-menu>
     <div class="wrap top-inner">
-      <a class="brand" href="#main">{person.name}</a>
-      <nav class="nav" aria-label="Sections">
-        {sections.map((s) => <a href={`#${s.id}`}>{s.label}</a>)}
-      </nav>
-      <a class="btn" href={person.resume} download>Download résumé</a>
+      <a class="brand" href="#top">{person.name}</a>
+      <div class="top-links" id="site-menu">
+        <a href="#work">Work</a>
+        <a href="#experience">Experience</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a class="pill pill-sm menu-resume" href={person.resume} target="_blank" rel="noopener">Resume</a>
+      </div>
+      <div class="top-actions">
+        <button class="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false" data-theme-toggle hidden>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"></path>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+          </svg>
+        </button>
+        <a class="pill pill-sm top-resume" href={person.resume} target="_blank" rel="noopener">Resume</a>
+        <button class="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu" data-menu-button hidden>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
-  </header>
+  </nav>
 
-  <main id="main" class="wrap">
-    <section class="hero">
-      <h1>{person.name}</h1>
-      <div class="hero-grid">
-        <div class="hero-text">
-          <p class="role">{person.role}</p>
-          <p class="summary" set:html={person.summary} />
-          <div class="cta">
-            <a class="btn" href={person.resume} download>Download résumé</a>
-            <a href={person.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a href={person.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-          </div>
+  <main id="top" class="wrap">
+    <header class="hero">
+      <div class="hero-bg" data-hero-bg aria-hidden="true"></div>
+      <div class="hero-text">
+        <h1>{person.headline} <em class="serif">{person.headlineItalic}</em></h1>
+        <p class="intro">{person.intro}</p>
+        <div class="hero-actions">
+          <a class="pill pill-dark" href="#work">View work ↓</a>
+          <!-- Scrolls to the footer email. A mailto: link does nothing for visitors without a mail app set up. -->
+          <a class="pill" href="#contact">Get in touch</a>
         </div>
+        <ol class="route" aria-label="Where I have lived, in order">
+          {
+            route.map((place, i) => (
+              <li class:list={{ now: i === route.length - 1 }} aria-current={i === route.length - 1 ? 'true' : undefined}>
+                {place}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+      <div class="hero-photo">
         <Image
-          class="hero-photo"
           src={portrait}
           alt={`Portrait of ${person.name}`}
-          widths={[200, 320, 400, 640]}
-          sizes="(max-width: 720px) 200px, 320px"
+          widths={[340, 520, 680]}
+          sizes="(max-width: 720px) 90vw, 340px"
           loading="eager"
           fetchpriority="high"
         />
       </div>
-      <dl class="facts">
-        {
-          facts.map((f) => (
-            <div>
-              <dt>{f.label}</dt>
-              <dd>{f.value}</dd>
-            </div>
-          ))
-        }
-      </dl>
+    </header>
+
+    <section class="stats" aria-label="Highlights">
+      {
+        stats.map((s) => (
+          <div class="stat">
+            <span class="stat-value">{s.value}</span>
+            <span class="stat-label">{s.label}</span>
+          </div>
+        ))
+      }
     </section>
 
-    <section class="sec" id="about">
-      <h2>About</h2>
-      <div class="body prose" data-reveal>
-        {about.map((p) => <p set:html={p} />)}
+    <section id="work" class="sec">
+      <div class="sec-head">
+        <h2>Selected work</h2>
+        <span class="mono label">2023 — Present</span>
       </div>
-    </section>
 
-    <section class="sec" id="experience">
-      <h2>Experience</h2>
-      <div class="body">
+      <div class="work">
+        <article class="card card-feature">
+          <ProjectVisual variant={feature.visual as 'oracle'} />
+          <div class="card-body">
+            <div class="card-copy">
+              <span class="mono label">{feature.meta}</span>
+              <h3>{feature.title}</h3>
+              <p>{feature.text}</p>
+            </div>
+            {
+              feature.outcomes && (
+                <div class="outcomes">
+                  {feature.outcomes.map((o) => (
+                    <div>
+                      <span class="outcome-value">{o.value}</span>
+                      <span class="outcome-label">{o.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+            <ul class="tags" aria-label="Technologies">{feature.tags.map((t) => <li>{t}</li>)}</ul>
+          </div>
+        </article>
+
         {
-          experience.map((job) => (
-            <article class="row" data-reveal>
-              <div class="meta">
-                {job.dates}
-                <br />
-                {job.place}
+          pair.map((w) => (
+            <article class="card">
+              <ProjectVisual variant={w.visual as 'ads' | 'fuzz'} />
+              <div class="card-copy">
+                <span class="mono label">{w.meta}</span>
+                <h3>{w.title}</h3>
+                <p>{w.text}</p>
+                {w.link && (
+                  <a class="text-link" href={w.link.href} target="_blank" rel="noopener noreferrer">
+                    {w.link.label} ↗
+                  </a>
+                )}
               </div>
-              <div class="main">
-                <h3>{job.title}</h3>
-                <p class="org">{job.org}</p>
-                <ul class="pts">
-                  {job.points.map((pt) => <li set:html={pt} />)}
-                </ul>
-              </div>
+              <ul class="tags" aria-label="Technologies">{w.tags.map((t) => <li>{t}</li>)}</ul>
             </article>
           ))
         }
       </div>
     </section>
 
-    <section class="sec" id="research">
-      <h2>Research</h2>
-      <div class="body">
-        <article class="row" data-reveal>
-          <div class="meta">
-            {research.meta.map((m, i) => (
-              <>
-                {i > 0 && <br />}
-                {m}
-              </>
-            ))}
+    <section id="experience" class="sec split">
+      <div class="split-head">
+        <h2>Experience</h2>
+        <p class="hint">Click a role for details.</p>
+      </div>
+      <div class="split-body exp">
+        {
+          experience.map((e, i) => (
+            <details name="experience" open={i === 0}>
+              <summary data-cursor-toggle>
+                <span class="exp-title">
+                  <span class="exp-role">{e.role}</span>
+                  <span class="exp-org">
+                    {e.company} · {e.place}
+                  </span>
+                </span>
+                <span class="exp-side">
+                  <span class="mono exp-dates">{e.dates}</span>
+                  <span class="exp-icon" aria-hidden="true"></span>
+                </span>
+              </summary>
+              <ul class="exp-points">{e.bullets.map((b) => <li>{b}</li>)}</ul>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
+    <section id="community" class="sec split">
+      <h2 class="split-head">Community</h2>
+      <div class="split-body panel-dark community">
+        <div class="community-copy">
+          <span class="mono label">{community.meta}</span>
+          <h3>{community.title} <em class="serif">{community.titleItalic}</em></h3>
+          <p>{community.text}</p>
+        </div>
+        <div class="community-stat">
+          <span class="community-value">{community.value}<span class="accent">+</span></span>
+          <span class="community-label">{community.label}</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="sec split">
+      <h2 class="split-head">About</h2>
+      <div class="split-body about">
+        <p class="about-lead">{about.before} <em class="serif">{about.italic}</em> {about.after}</p>
+
+        <div class="about-grid">
+          <div class="about-col">
+            <h3 class="mono label">Education</h3>
+            {
+              education.map((e) => (
+                <div class="item">
+                  <span class="item-title">{e.degree}</span>
+                  <span class="item-sub">{e.school}</span>
+                </div>
+              ))
+            }
           </div>
-          <div class="main">
-            <h3>{research.title}</h3>
-            {research.paragraphs.map((p) => <p>{p}</p>)}
-            <ul class="cves" aria-label="CVEs discovered">
+          <div class="about-col">
+            <h3 class="mono label">Publication</h3>
+            <div class="item">
+              <a class="item-title" href={publication.href} target="_blank" rel="noopener noreferrer">{publication.title} ↗</a>
+              <span class="item-sub">{publication.meta}</span>
+            </div>
+          </div>
+          <div class="about-col">
+            <h3 class="mono label">CVEs discovered</h3>
+            <ul class="cves">
               {
-                research.cves.map((c) => (
+                cves.ids.map((id) => (
                   <li>
-                    <a
-                      href={`https://nvd.nist.gov/vuln/detail/${c}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${c} on the National Vulnerability Database`}
-                    >
-                      {c}
+                    <a class="mono" href={`https://nvd.nist.gov/vuln/detail/${id}`} target="_blank" rel="noopener noreferrer">
+                      {id} ↗
                     </a>
                   </li>
                 ))
               }
             </ul>
-            <p>
-              <a href={research.paper} target="_blank" rel="noopener noreferrer">Read the paper (PDF)</a>
-            </p>
+            <span class="note">{cves.note}</span>
           </div>
-        </article>
-      </div>
-    </section>
+        </div>
 
-    <section class="sec" id="education">
-      <h2>Education</h2>
-      <div class="body">
-        {
-          education.map((e) => (
-            <article class="row" data-reveal>
-              <div class="meta">
-                {e.dates}
-                <br />
-                {e.place}
-              </div>
-              <div class="main">
-                <h3>{e.degree}</h3>
-                <p class="org">{e.school}</p>
-                {e.note && <p class="note">{e.note}</p>}
-              </div>
-            </article>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="sec" id="skills">
-      <h2>Skills</h2>
-      <div class="body skills">
-        {
-          skills.map((s) => (
-            <div class="row" data-reveal>
-              <div class="meta">{s.group}</div>
-              <div class="main">
-                <p>{s.items}</p>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="sec" id="contact">
-      <h2>Contact</h2>
-      <div class="body" data-reveal>
-        <p class="mail"><a href={`mailto:${person.email}`}>{person.email}</a></p>
-        <div class="links">
-          <a class="btn" href={person.resume} download>Download résumé</a>
-          <a href={person.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a href={person.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+        <div class="toolkit">
+          <h3 class="mono label">Toolkit</h3>
+          <div class="toolkit-grid">
+            {
+              toolkit.map((t) => (
+                <div>
+                  <span class="toolkit-group">{t.group}</span>
+                  <span class="toolkit-items">{t.items}</span>
+                </div>
+              ))
+            }
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="wrap">
-    <div class="foot">
-      <span>{person.name}</span>
-      <span>{person.location}</span>
+  <footer id="contact" class="foot">
+    <div class="wrap foot-inner">
+      <div class="foot-main">
+        <span class="mono label">Let’s build something</span>
+        <a class="foot-mail" href={`mailto:${person.email}`} data-copy-email={person.email} data-cursor="Copy">
+          {person.email.split('@')[0]}<em class="serif">@{person.email.split('@')[1]}</em>
+        </a>
+      </div>
+      <div class="foot-bar">
+        <span>© {year} {person.name}</span>
+        <div class="foot-links">
+          <a href={person.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+          <a href={person.resume} target="_blank" rel="noopener">Resume (PDF) ↗</a>
+        </div>
+      </div>
     </div>
   </footer>
 </Layout>

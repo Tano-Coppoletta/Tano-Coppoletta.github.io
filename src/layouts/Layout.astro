@@ -35,34 +35,333 @@ const ogImage = new URL('/images/gaetano.jpg', Astro.site);
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
+    <script is:inline>
+      // Light by default; keep a visitor's explicit choice. Runs before paint so the theme never flashes.
+      // The .js class lets CSS collapse the phone menu only when the script that opens it can run.
+      document.documentElement.classList.add('js');
+      try {
+        const saved = localStorage.getItem('theme');
+        document.documentElement.dataset.theme = saved === 'dark' ? 'dark' : 'light';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
       rel="stylesheet"
     />
   </head>
   <body>
-    <a class="skip" href="#main">Skip to content</a>
+    <a class="skip" href="#top">Skip to content</a>
     <slot />
 
     <script>
-      // Subtle scroll reveal. Skipped for reduced motion and when the browser lacks IntersectionObserver.
-      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!calm && 'IntersectionObserver' in window) {
-        document.documentElement.classList.add('motion');
-        const io = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('in');
-                io.unobserve(entry.target);
+      // Theme toggle. A click saves the choice for later visits and tells the hero network to recolour.
+      const root = document.documentElement;
+      const isDark = () => root.dataset.theme === 'dark';
+      document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((button) => {
+        const sync = () => button.setAttribute('aria-pressed', String(isDark()));
+        sync();
+        button.hidden = false;
+        button.addEventListener('click', () => {
+          root.dataset.theme = isDark() ? 'light' : 'dark';
+          try {
+            localStorage.setItem('theme', root.dataset.theme);
+          } catch (e) {}
+          sync();
+          window.dispatchEvent(new Event('themechange'));
+        });
+      });
+    </script>
+
+    <script>
+      // Phone menu. Closes on a link tap, Escape, a tap outside, or when the window grows past the phone layout.
+      const nav = document.querySelector<HTMLElement>('[data-menu]');
+      const burger = document.querySelector<HTMLButtonElement>('[data-menu-button]');
+      if (nav && burger) {
+        const phone = window.matchMedia('(max-width: 720px)');
+        const setOpen = (open: boolean) => {
+          nav.toggleAttribute('data-open', open);
+          burger.setAttribute('aria-expanded', String(open));
+          burger.setAttribute('aria-label', open ? 'Close menu' : 'Menu');
+        };
+        burger.hidden = false;
+        burger.addEventListener('click', () => setOpen(!nav.hasAttribute('data-open')));
+        nav.querySelectorAll('#site-menu a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && nav.hasAttribute('data-open')) {
+            setOpen(false);
+            burger.focus();
+          }
+        });
+        document.addEventListener('click', (e) => {
+          if (nav.hasAttribute('data-open') && !nav.contains(e.target as Node)) setOpen(false);
+        });
+        phone.addEventListener('change', (e) => {
+          if (!e.matches) setOpen(false);
+        });
+      }
+    </script>
+
+    <script>
+      // Hero background: drifting nodes linked when close, a few travelling "packets",
+      // and nodes near the pointer pulled toward it in the accent colour.
+      // Reduced motion draws one still frame. Paused while the hero is off screen.
+      const host = document.querySelector<HTMLElement>('[data-hero-bg]');
+      if (host) {
+        const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const canvas = document.createElement('canvas');
+        host.appendChild(canvas);
+        const ctx = canvas.getContext('2d')!;
+        let W = 0;
+        let H = 0;
+        let ink = '23, 23, 20';
+        let hot = '214, 104, 48';
+        const readColours = () => {
+          const cs = getComputedStyle(document.documentElement);
+          ink = cs.getPropertyValue('--net-ink').trim() || ink;
+          hot = cs.getPropertyValue('--net-hot').trim() || hot;
+        };
+        readColours();
+
+        type Node = { x: number; y: number; vx: number; vy: number; r: number };
+        type Packet = { a: number; b: number; u: number };
+        let nodes: Node[] = [];
+        let packets: Packet[] = [];
+        let seededW = 0;
+        const LINK = 130;
+        const m = { x: -999, y: -999, tx: -999, ty: -999 };
+
+        const seed = () => {
+          const n = Math.round(Math.min(110, Math.max(36, (W * H) / 7000)));
+          nodes = Array.from({ length: n }, () => ({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            vx: (Math.random() - 0.5) * 14,
+            vy: (Math.random() - 0.5) * 14,
+            r: 1.2 + Math.random() * 1.4,
+          }));
+          packets = Array.from({ length: 9 }, () => ({ a: (Math.random() * n) | 0, b: -1, u: 0 }));
+          seededW = W;
+        };
+
+        const size = () => {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          W = host.clientWidth;
+          H = host.clientHeight;
+          canvas.width = W * dpr;
+          canvas.height = H * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          if (!nodes.length || Math.abs(W - seededW) > 40) seed();
+          if (still) draw(0);
+        };
+
+        const draw = (dt: number) => {
+          m.x += (m.tx - m.x) * 0.15;
+          m.y += (m.ty - m.y) * 0.15;
+          for (const p of nodes) {
+            const dx = p.x - m.x;
+            const dy = p.y - m.y;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < 14400 && d2 > 1) {
+              const d = Math.sqrt(d2);
+              const f = (1 - d / 120) * 40 * dt;
+              p.x += (dx / d) * f;
+              p.y += (dy / d) * f;
+            }
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            if (p.x < -20) p.x = W + 20;
+            if (p.x > W + 20) p.x = -20;
+            if (p.y < -20) p.y = H + 20;
+            if (p.y > H + 20) p.y = -20;
+          }
+          ctx.clearRect(0, 0, W, H);
+          ctx.lineWidth = 1;
+          for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+              const a = nodes[i];
+              const b = nodes[j];
+              const d = Math.hypot(a.x - b.x, a.y - b.y);
+              if (d < LINK) {
+                ctx.strokeStyle = `rgba(${ink}, ${0.14 * (1 - d / LINK)})`;
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.stroke();
               }
             }
-          },
-          { rootMargin: '0px 0px -8% 0px' }
-        );
-        document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+          }
+          for (const p of nodes) {
+            const d = Math.hypot(p.x - m.x, p.y - m.y);
+            if (d < 170) {
+              ctx.strokeStyle = `rgba(${hot}, ${0.55 * (1 - d / 170)})`;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(m.x, m.y);
+              ctx.stroke();
+            }
+            ctx.fillStyle = d < 170 ? `rgba(${hot}, 0.85)` : `rgba(${ink}, 0.38)`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          if (still) return;
+          for (const k of packets) {
+            const A = nodes[k.a];
+            if (k.b < 0 || !nodes[k.b] || Math.hypot(A.x - nodes[k.b].x, A.y - nodes[k.b].y) > LINK * 1.2) {
+              let best = -1;
+              let bd = 1e9;
+              for (let j = 0; j < nodes.length; j++) {
+                if (j === k.a) continue;
+                const d = Math.hypot(A.x - nodes[j].x, A.y - nodes[j].y);
+                if (d < LINK && d < bd && Math.random() < 0.6) {
+                  bd = d;
+                  best = j;
+                }
+              }
+              if (best < 0) {
+                k.a = (Math.random() * nodes.length) | 0;
+                continue;
+              }
+              k.b = best;
+              k.u = 0;
+            }
+            const B = nodes[k.b];
+            k.u += dt * 1.1;
+            if (k.u >= 1) {
+              k.a = k.b;
+              k.b = -1;
+              continue;
+            }
+            const x = A.x + (B.x - A.x) * k.u;
+            const y = A.y + (B.y - A.y) * k.u;
+            ctx.strokeStyle = `rgba(${hot}, 0.35)`;
+            ctx.beginPath();
+            ctx.moveTo(A.x, A.y);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.fillStyle = `rgb(${hot})`;
+            ctx.beginPath();
+            ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        };
+
+        let raf = 0;
+        let prev = performance.now();
+        const frame = (now: number) => {
+          raf = requestAnimationFrame(frame);
+          const dt = Math.min(0.05, (now - prev) / 1000);
+          prev = now;
+          draw(dt);
+        };
+        const start = () => {
+          if (still || raf) return;
+          prev = performance.now();
+          raf = requestAnimationFrame(frame);
+        };
+        const stop = () => {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        };
+
+        new ResizeObserver(size).observe(host);
+        size();
+        new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop())).observe(host);
+        window.addEventListener('pointermove', (ev) => {
+          const r = host.getBoundingClientRect();
+          m.tx = ev.clientX - r.left;
+          m.ty = ev.clientY - r.top;
+        });
+        window.addEventListener('themechange', () => {
+          readColours();
+          if (still) draw(0);
+        });
+      }
+    </script>
+
+    <script>
+      // Custom cursor on mouse/trackpad devices: a dot with a trailing ring that becomes a label
+      // ("Open", "Close", "↗", "Copy") over interactive elements. It stays a dot and ring over text too.
+      // Clicking the big footer email copies it and shows "Copied ✓".
+      if (window.matchMedia('(pointer: fine)').matches) {
+        const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const ring = document.createElement('div');
+        const dot = document.createElement('div');
+        ring.className = 'cc-ring';
+        dot.className = 'cc-dot';
+        ring.setAttribute('aria-hidden', 'true');
+        dot.setAttribute('aria-hidden', 'true');
+        document.body.append(ring, dot);
+        document.documentElement.classList.add('cc-on');
+
+        const s = { x: -100, y: -100, rx: -100, ry: -100, down: false, el: null as Element | null, flash: '', flashUntil: 0 };
+
+        const setMode = (mode: 'hide' | 'ring' | 'link' | 'label', label = '', dark = false) => {
+          ring.dataset.mode = mode;
+          ring.toggleAttribute('data-dark', dark);
+          ring.textContent = mode === 'label' ? label : '';
+          dot.toggleAttribute('data-on', mode === 'ring' || mode === 'link');
+        };
+
+        const resolve = (el: Element | null) => {
+          if (!el || !el.closest) return;
+          const dark = !!el.closest('footer, .panel-dark');
+          if (performance.now() < s.flashUntil) return setMode('label', s.flash, dark);
+          const summary = el.closest('summary');
+          if (summary) return setMode('label', summary.parentElement?.hasAttribute('open') ? 'Close' : 'Open', dark);
+          const tagged = el.closest('[data-cursor]');
+          if (tagged) return setMode('label', tagged.getAttribute('data-cursor') || '', dark);
+          const link = el.closest('a, button, [role=button]');
+          if (link) return link.getAttribute('target') === '_blank' ? setMode('label', '↗', dark) : setMode('link', '', dark);
+          setMode('ring', '', dark);
+        };
+
+        window.addEventListener('pointermove', (e) => {
+          s.x = e.clientX;
+          s.y = e.clientY;
+          if (s.rx < -50) {
+            s.rx = s.x;
+            s.ry = s.y;
+          }
+          s.el = e.target as Element;
+          resolve(s.el);
+        });
+        window.addEventListener('pointerdown', () => (s.down = true));
+        window.addEventListener('pointerup', () => (s.down = false));
+        // Re-check after a click so "Open" flips to "Close" without moving the mouse.
+        window.addEventListener('click', () => requestAnimationFrame(() => resolve(s.el)));
+        document.addEventListener('pointerleave', () => setMode('hide'));
+
+        const tick = () => {
+          requestAnimationFrame(tick);
+          const k = calm ? 1 : 0.18;
+          s.rx += (s.x - s.rx) * k;
+          s.ry += (s.y - s.ry) * k;
+          ring.style.transform = `translate(${s.rx}px, ${s.ry}px) translate(-50%, -50%) scale(${s.down ? 0.85 : 1})`;
+          dot.style.transform = `translate(${s.x}px, ${s.y}px) translate(-50%, -50%)`;
+        };
+        tick();
+
+        document.querySelectorAll<HTMLAnchorElement>('[data-copy-email]').forEach((a) => {
+          a.addEventListener('click', (ev) => {
+            if (!navigator.clipboard) return; // fall back to the mailto link
+            ev.preventDefault();
+            navigator.clipboard.writeText(a.dataset.copyEmail || '').then(
+              () => {
+                s.flash = 'Copied ✓';
+                s.flashUntil = performance.now() + 1400;
+                resolve(s.el);
+                setTimeout(() => resolve(s.el), 1450);
+              },
+              () => (window.location.href = a.href)
+            );
+          });
+        });
       }
     </script>
   </body>

@@ -10,7 +10,7 @@ export default defineConfig({
   // The site is a single page now. Keep the old URLs working.
   redirects: {
     '/about': '/#about',
-    '/projects': '/#research',
+    '/projects': '/#work',
     '/contact': '/#contact'
   }
 });

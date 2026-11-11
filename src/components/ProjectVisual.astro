@@ -1,0 +1,552 @@
+---
+// Concept illustrations for the Selected work cards, ported from the Claude Design file.
+// They are drawn with HTML so they scale with the card. Decorative only: the card text says everything.
+interface Props {
+  variant: 'oracle' | 'ads' | 'fuzz';
+}
+const { variant } = Astro.props;
+
+const tickets = [
+  { title: 'Path traversal in upload handler', meta: 'VR‑2481 · External researcher', sev: 'High', active: true },
+  { title: 'Outdated TLS library in component', meta: 'VR‑2479 · Internal scan', sev: 'Medium' },
+  { title: 'Auth bypass on admin API', meta: 'VR‑2476 · Customer report', sev: 'Critical' },
+];
+
+const fuzzLog = [
+  { msg: 'BootNotification', result: 'accepted' },
+  { msg: 'Authorize', result: 'mutated idTag' },
+  { msg: 'StartTransaction', result: 'out-of-order' },
+  { msg: 'MeterValues', result: 'unhandled exception', bad: true },
+  { msg: 'StatusNotification', result: 'accepted' },
+  { msg: 'StopTransaction', result: 'state corruption', bad: true },
+];
+---
+
+{
+  variant === 'oracle' && (
+    <div class="pv pv-oracle" aria-hidden="true">
+      <div class="win">
+        <div class="win-bar">
+          <span class="win-title">Vulnerability intake</span>
+          <div class="chips">
+            <span class="chip chip-dark">Open · 24</span>
+            <span class="chip">Needs review · 3</span>
+          </div>
+        </div>
+        <div class="win-body">
+          <div class="list">
+            {tickets.map((t) => (
+              <div class:list={['ticket', { active: t.active }]}>
+                <div class="ticket-text">
+                  <span class="ticket-title">{t.title}</span>
+                  <span class="mono ticket-meta">{t.meta}</span>
+                </div>
+                <span class={`sev sev-${t.sev.toLowerCase()}`}>{t.sev}</span>
+              </div>
+            ))}
+          </div>
+          <div class="side">
+            <span class="mono side-label">AI summary</span>
+            <span class="side-text">Unsanitized filename allows writes outside the upload directory.</span>
+            <div class="side-row">
+              <span>Suggested severity</span>
+              <span class="sev sev-high">High</span>
+            </div>
+            <div class="side-actions">
+              <span class="act act-dark">Approve</span>
+              <span class="act">Route</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+{
+  variant === 'ads' && (
+    <div class="pv pv-ads" aria-hidden="true">
+      <div class="abs" style="left:0;right:0;bottom:0;height:24%;background:oklch(0.42 0.08 40)" />
+      <div class="abs r4" style="left:6%;top:12%;width:10%;height:62%;background:oklch(0.66 0.12 38)" />
+      <div class="abs r4" style="left:20%;top:73%;width:5.5%;height:27%;background:oklch(0.38 0.06 255)" />
+      <div class="abs r4" style="left:26.5%;top:73%;width:5.5%;height:27%;background:oklch(0.38 0.06 255)" />
+      <div class="abs" style="left:15.5%;top:38%;width:5%;height:30%;border-radius:8px;background:oklch(0.83 0.15 88);transform:rotate(8deg);transform-origin:top right;filter:brightness(0.92)" />
+      <div class="abs" style="left:31.5%;top:38%;width:5%;height:30%;border-radius:8px;background:oklch(0.83 0.15 88);transform:rotate(-8deg);transform-origin:top left;filter:brightness(0.92)" />
+      <div class="abs" style="left:18.5%;top:36%;width:15%;height:39%;border-radius:40% 40% 10% 10%;background:oklch(0.83 0.15 88)" />
+      <div class="abs" style="left:22.2%;top:19%;width:7.6%;aspect-ratio:1;border-radius:50%;background:oklch(0.8 0.06 60)" />
+      <div class="abs" style="left:21.8%;top:15.5%;width:8.4%;height:5%;border-radius:50% 50% 10% 10%;background:#e9e6dc" />
+      <div class="abs r4" style="left:49%;top:76%;width:5%;height:24%;background:#26251f" />
+      <div class="abs r4" style="left:55%;top:76%;width:5%;height:24%;background:#26251f" />
+      <div class="abs" style="left:44.5%;top:40%;width:5%;height:32%;border-radius:8px;background:oklch(0.5 0.08 55);transform:rotate(8deg);transform-origin:top right;filter:brightness(0.9)" />
+      <div class="abs" style="left:59.5%;top:40%;width:5%;height:32%;border-radius:8px;background:oklch(0.5 0.08 55);transform:rotate(-8deg);transform-origin:top left;filter:brightness(0.9)" />
+      <div class="abs" style="left:50.3%;top:22%;width:9.4%;height:22%;border-radius:50% 50% 30% 30%;background:oklch(0.5 0.08 55);filter:brightness(0.88)" />
+      <div class="abs" style="left:47%;top:38%;width:15.5%;height:42%;border-radius:36% 36% 10% 10%;background:oklch(0.5 0.08 55)" />
+      <div class="abs" style="left:51.6%;top:25%;width:6.8%;aspect-ratio:1;border-radius:50%;background:oklch(0.8 0.06 60)" />
+      <div class="abs box" style="left:14%;top:33%;width:24%;height:44%">
+        <span class="mono tag" style="bottom:-20px">Sweater · 0.94</span>
+      </div>
+      <div class="abs box box-dashed" style="left:43%;top:20%;width:23%;height:62%">
+        <span class="mono tag tag-soft" style="top:-20px">Parka · 0.89</span>
+      </div>
+      <div class="mono ads-label">
+        <span class="ads-dot" />
+        Contextual ads
+      </div>
+      <div class="shop">
+        <div class="product">
+          <div class="product-img">
+            <div class="abs" style="left:20%;top:28%;width:12%;height:48%;border-radius:6px;background:oklch(0.83 0.15 88);transform:rotate(10deg);transform-origin:top right;filter:brightness(0.93)" />
+            <div class="abs" style="left:68%;top:28%;width:12%;height:48%;border-radius:6px;background:oklch(0.83 0.15 88);transform:rotate(-10deg);transform-origin:top left;filter:brightness(0.93)" />
+            <div class="abs" style="left:30%;top:24%;width:40%;height:56%;border-radius:22% 22% 8% 8%;background:oklch(0.83 0.15 88)" />
+          </div>
+          <span class="product-name">Knit sweater</span>
+          <span class="product-price">$89 · Shop ↗</span>
+        </div>
+        <div class="product">
+          <div class="product-img">
+            <div class="abs" style="left:39%;top:12%;width:22%;height:22%;border-radius:50% 50% 30% 30%;background:oklch(0.5 0.08 55)" />
+            <div class="abs" style="left:20%;top:28%;width:12%;height:48%;border-radius:6px;background:oklch(0.5 0.08 55);transform:rotate(10deg);transform-origin:top right;filter:brightness(0.93)" />
+            <div class="abs" style="left:68%;top:28%;width:12%;height:48%;border-radius:6px;background:oklch(0.5 0.08 55);transform:rotate(-10deg);transform-origin:top left;filter:brightness(0.93)" />
+            <div class="abs" style="left:30%;top:24%;width:40%;height:62%;border-radius:22% 22% 8% 8%;background:oklch(0.5 0.08 55)" />
+          </div>
+          <span class="product-name">Hooded parka</span>
+          <span class="product-price">$240 · Shop ↗</span>
+        </div>
+      </div>
+      <div class="player">
+        <span class="mono">12:04</span>
+        <div class="track"><div class="track-fill" /></div>
+      </div>
+    </div>
+  )
+}
+
+{
+  variant === 'fuzz' && (
+    <div class="pv pv-fuzz mono" aria-hidden="true">
+      <div class="fz-head">
+        <span>ocppstorm · session</span>
+        <span>OCPP 1.6 · CSMS</span>
+      </div>
+      <div class="fz-cmd">$ ocppstorm run --mode state-machine --target csms</div>
+      <div class="fz-log">
+        {fuzzLog.map((l) => (
+          <div class:list={['fz-line', { bad: l.bad }]}>
+            <span class="fz-mark">{l.bad ? '✕' : '→'}</span>
+            <span class="fz-msg">{l.msg}</span>
+            <span class="fz-res">{l.result}</span>
+          </div>
+        ))}
+      </div>
+      <div class="fz-foot">
+        <span>findings → disclosed</span>
+        <span class="fz-hot">6 CVEs</span>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  /* Illustration colours stay fixed in both themes: they are pictures, not interface. */
+  .pv {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    box-sizing: border-box;
+    color: #171714;
+  }
+
+  .mono {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+  }
+
+  .abs {
+    position: absolute;
+  }
+
+  .r4 {
+    border-radius: 4px;
+  }
+
+  /* Oracle: a vulnerability-intake window */
+  .pv-oracle {
+    aspect-ratio: 16 / 11;
+    background: #e9e7df;
+    padding: clamp(12px, 2.4vw, 24px);
+    display: flex;
+  }
+
+  .win {
+    flex: 1;
+    min-width: 0;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px -18px rgba(23, 23, 20, 0.35);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .win-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #ecebe4;
+  }
+
+  .win-title {
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .chips {
+    display: flex;
+    gap: 6px;
+  }
+
+  .chip {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 9.5px;
+    padding: 3px 7px;
+    border-radius: 6px;
+    border: 1px solid #e3e1d9;
+    color: #5f5e58;
+    white-space: nowrap;
+  }
+
+  .chip-dark {
+    background: #171714;
+    border-color: #171714;
+    color: #f5f4ef;
+  }
+
+  .win-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    overflow: hidden;
+  }
+
+  .list {
+    flex: 1 1 60%;
+    min-width: 0;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    overflow: hidden;
+  }
+
+  .ticket {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    padding: 7px 8px;
+    border-radius: 8px;
+  }
+
+  .ticket.active {
+    background: #f3f1ea;
+    box-shadow: inset 2px 0 0 #171714;
+  }
+
+  .ticket-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .ticket-title {
+    font-size: 11.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ticket-meta {
+    font-size: 9.5px;
+    color: #6b6a64;
+  }
+
+  .sev {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .sev-high {
+    background: oklch(0.94 0.05 55);
+    color: oklch(0.47 0.13 55);
+  }
+
+  .sev-medium {
+    background: oklch(0.95 0.05 90);
+    color: oklch(0.45 0.1 90);
+  }
+
+  .sev-critical {
+    background: oklch(0.93 0.05 25);
+    color: oklch(0.45 0.16 25);
+  }
+
+  .side {
+    flex: 0 0 40%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border-left: 1px solid #ecebe4;
+    background: #fbfaf7;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow: hidden;
+  }
+
+  .side-label {
+    font-size: 9.5px;
+    color: #6b6a64;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .side-text {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #33322e;
+  }
+
+  .side-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10.5px;
+    color: #4d4c47;
+  }
+
+  .side-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: auto;
+  }
+
+  .act {
+    flex: 1;
+    text-align: center;
+    font-size: 10.5px;
+    padding: 4px;
+    border-radius: 6px;
+    border: 1px solid #e3e1d9;
+  }
+
+  .act-dark {
+    background: #171714;
+    border-color: #171714;
+    color: #f5f4ef;
+  }
+
+  /* GorgeousTV: a video frame with detected items and matching products */
+  .pv-ads {
+    aspect-ratio: 16 / 10;
+    position: relative;
+    background: oklch(0.6 0.13 38);
+  }
+
+  .box {
+    border: 1.5px solid #fff;
+    border-radius: 6px;
+  }
+
+  .box-dashed {
+    border: 1.5px dashed rgba(255, 255, 255, 0.85);
+  }
+
+  .tag {
+    position: absolute;
+    left: -1.5px;
+    font-size: 9.5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #fff;
+    white-space: nowrap;
+  }
+
+  .tag-soft {
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  .ads-label {
+    position: absolute;
+    left: 4%;
+    top: 6%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9.5px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .ads-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+  }
+
+  .shop {
+    position: absolute;
+    right: 3.5%;
+    top: 6%;
+    bottom: 16%;
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .product {
+    flex: 1;
+    min-height: 0;
+    background: #fff;
+    border-radius: 10px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  .product-img {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    border-radius: 6px;
+    background: #f3f1ea;
+    overflow: hidden;
+    margin-bottom: 3px;
+  }
+
+  .product-name {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .product-price {
+    font-size: 9px;
+    color: #6b6a64;
+    padding: 0 2px 2px;
+  }
+
+  .player {
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    bottom: 6%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 9.5px;
+    color: #fff;
+  }
+
+  .track {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  .track-fill {
+    width: 38%;
+    height: 100%;
+    border-radius: 2px;
+    background: #fff;
+  }
+
+  /* OCPPStorm: a terminal session */
+  .pv-fuzz {
+    aspect-ratio: 16 / 10;
+    background: #171714;
+    color: #d9d7cf;
+    font-size: clamp(9.5px, 1vw, 11.5px);
+    line-height: 1.75;
+    padding: clamp(14px, 2.4vw, 22px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .fz-head {
+    display: flex;
+    justify-content: space-between;
+    color: #8f8d85;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .fz-cmd {
+    color: #f5f4ef;
+  }
+
+  .fz-log {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fz-line {
+    display: flex;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .fz-mark {
+    width: 10px;
+    flex: none;
+    color: #8f8d85;
+  }
+
+  .fz-msg {
+    width: 44%;
+    flex: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fz-res {
+    color: #8f8d85;
+  }
+
+  .fz-line.bad .fz-mark,
+  .fz-line.bad .fz-res,
+  .fz-hot {
+    color: oklch(0.72 0.15 40);
+  }
+
+  /* Too narrow for both chips in the window bar on phones. */
+  @media (max-width: 480px) {
+    .chip:not(.chip-dark) {
+      display: none;
+    }
+  }
+
+  .fz-foot {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #34332f;
+  }
+</style>

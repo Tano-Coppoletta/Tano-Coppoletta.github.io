@@ -28,11 +28,17 @@ My most significant research project is **OCPPStorm**, a comprehensive black box
 
 ## This Website
 
-This is my personal portfolio website - a minimal, professional site with a subtle cybersecurity aesthetic. It's built using:
+This is my personal portfolio website, presenting selected engineering work, experience, research, and contact information. It's built using:
 
 - **Astro** for static site generation
-- **Tailwind CSS** for styling
-- **Custom components** for the terminal-style typewriter effect
+- **Custom CSS** for a responsive single page with a warm light palette and an optional dark theme
+- **HTML concept illustrations** for the three featured projects (`src/components/ProjectVisual.astro`)
+- **Small vanilla scripts** for the animated hero network, the custom cursor, the phone menu and the theme toggle
+- **Native HTML details** for the expandable experience list
+
+Site content lives in `src/data/profile.ts`. The page is in `src/pages/index.astro`, the scripts in `src/layouts/Layout.astro`, and styles in `src/styles/main.css`. The design spec is `design-system/gaetano-coppoletta/pages/home.md`.
+
+Run `npm install` and `npm run dev` for local development. Run `npm run build` to create the static site in `dist/`.
 
 
 ## Current Work

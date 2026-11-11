@@ -1,116 +1,269 @@
 ---
+// Layout follows the Claude Design file "Portfolio.dc.html" (design-export/, not committed).
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
-import Terminal from '../components/Terminal.astro';
-import SectionHeading from '../components/SectionHeading.astro';
-import Card from '../components/Card.astro';
-import SkillBadge from '../components/SkillBadge.astro';
+import ProjectVisual from '../components/ProjectVisual.astro';
+import portrait from '../assets/gaetano-portrait.jpg';
+import {
+  person,
+  route,
+  stats,
+  work,
+  experience,
+  community,
+  about,
+  education,
+  publication,
+  cves,
+  toolkit,
+} from '../data/profile';
+
+const [feature, ...pair] = work;
+const year = new Date().getFullYear();
 ---
 
-<Layout title="Gaetano Coppoletta - Software Developer focused on cybersecurity, building security automation and vulnerability intelligence tools.">
-  <!-- Hero Section -->
-  <section class="section">
-    <div class="container">
-      <div class="grid-2 items-center">
-        <div>
-          <div class="eyebrow">Software Developer · Cybersecurity</div>
-          <h1 class="mb-4">I design and build security automation and vulnerability intelligence tools. </h1>
-         
-          <div class="flex flex-wrap gap-4">
-            <a href="/about/" class="btn">About me</a>
-            <a href="/projects/" class="btn btn-secondary">Projects</a>
+<Layout title={`${person.name}, Software Engineer`} description={person.description}>
+  <nav class="top" aria-label="Main" data-menu>
+    <div class="wrap top-inner">
+      <a class="brand" href="#top">{person.name}</a>
+      <div class="top-links" id="site-menu">
+        <a href="#work">Work</a>
+        <a href="#experience">Experience</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a class="pill pill-sm menu-resume" href={person.resume} target="_blank" rel="noopener">Resume</a>
+      </div>
+      <div class="top-actions">
+        <button class="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false" data-theme-toggle hidden>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"></path>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+          </svg>
+        </button>
+        <a class="pill pill-sm top-resume" href={person.resume} target="_blank" rel="noopener">Resume</a>
+        <button class="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu" data-menu-button hidden>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top" class="wrap">
+    <header class="hero">
+      <div class="hero-bg" data-hero-bg aria-hidden="true"></div>
+      <div class="hero-text">
+        <h1>{person.headline} <em class="serif">{person.headlineItalic}</em></h1>
+        <p class="intro">{person.intro}</p>
+        <div class="hero-actions">
+          <a class="pill pill-dark" href="#work">View work ↓</a>
+          <!-- Scrolls to the footer email. A mailto: link does nothing for visitors without a mail app set up. -->
+          <a class="pill" href="#contact">Get in touch</a>
+        </div>
+        <ol class="route" aria-label="Where I have lived, in order">
+          {
+            route.map((place, i) => (
+              <li class:list={{ now: i === route.length - 1 }} aria-current={i === route.length - 1 ? 'true' : undefined}>
+                {place}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+      <div class="hero-photo">
+        <Image
+          src={portrait}
+          alt={`Portrait of ${person.name}`}
+          widths={[340, 520, 680]}
+          sizes="(max-width: 720px) 90vw, 340px"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </header>
+
+    <section class="stats" aria-label="Highlights">
+      {
+        stats.map((s) => (
+          <div class="stat">
+            <span class="stat-value">{s.value}</span>
+            <span class="stat-label">{s.label}</span>
+          </div>
+        ))
+      }
+    </section>
+
+    <section id="work" class="sec">
+      <div class="sec-head">
+        <h2>Selected work</h2>
+        <span class="mono label">2023 — Present</span>
+      </div>
+
+      <div class="work">
+        <article class="card card-feature">
+          <ProjectVisual variant={feature.visual as 'oracle'} />
+          <div class="card-body">
+            <div class="card-copy">
+              <span class="mono label">{feature.meta}</span>
+              <h3>{feature.title}</h3>
+              <p>{feature.text}</p>
+            </div>
+            {
+              feature.outcomes && (
+                <div class="outcomes">
+                  {feature.outcomes.map((o) => (
+                    <div>
+                      <span class="outcome-value">{o.value}</span>
+                      <span class="outcome-label">{o.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+            <ul class="tags" aria-label="Technologies">{feature.tags.map((t) => <li>{t}</li>)}</ul>
+          </div>
+        </article>
+
+        {
+          pair.map((w) => (
+            <article class="card">
+              <ProjectVisual variant={w.visual as 'ads' | 'fuzz'} />
+              <div class="card-copy">
+                <span class="mono label">{w.meta}</span>
+                <h3>{w.title}</h3>
+                <p>{w.text}</p>
+                {w.link && (
+                  <a class="text-link" href={w.link.href} target="_blank" rel="noopener noreferrer">
+                    {w.link.label} ↗
+                  </a>
+                )}
+              </div>
+              <ul class="tags" aria-label="Technologies">{w.tags.map((t) => <li>{t}</li>)}</ul>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section id="experience" class="sec split">
+      <div class="split-head">
+        <h2>Experience</h2>
+        <p class="hint">Click a role for details.</p>
+      </div>
+      <div class="split-body exp">
+        {
+          experience.map((e, i) => (
+            <details name="experience" open={i === 0}>
+              <summary data-cursor-toggle>
+                <span class="exp-title">
+                  <span class="exp-role">{e.role}</span>
+                  <span class="exp-org">
+                    {e.company} · {e.place}
+                  </span>
+                </span>
+                <span class="exp-side">
+                  <span class="mono exp-dates">{e.dates}</span>
+                  <span class="exp-icon" aria-hidden="true"></span>
+                </span>
+              </summary>
+              <ul class="exp-points">{e.bullets.map((b) => <li>{b}</li>)}</ul>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
+    <section id="community" class="sec split">
+      <h2 class="split-head">Community</h2>
+      <div class="split-body panel-dark community">
+        <div class="community-copy">
+          <span class="mono label">{community.meta}</span>
+          <h3>{community.title} <em class="serif">{community.titleItalic}</em></h3>
+          <p>{community.text}</p>
+        </div>
+        <div class="community-stat">
+          <span class="community-value">{community.value}<span class="accent">+</span></span>
+          <span class="community-label">{community.label}</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="sec split">
+      <h2 class="split-head">About</h2>
+      <div class="split-body about">
+        <p class="about-lead">{about.before} <em class="serif">{about.italic}</em> {about.after}</p>
+
+        <div class="about-grid">
+          <div class="about-col">
+            <h3 class="mono label">Education</h3>
+            {
+              education.map((e) => (
+                <div class="item">
+                  <span class="item-title">{e.degree}</span>
+                  <span class="item-sub">{e.school}</span>
+                </div>
+              ))
+            }
+          </div>
+          <div class="about-col">
+            <h3 class="mono label">Publication</h3>
+            <div class="item">
+              <a class="item-title" href={publication.href} target="_blank" rel="noopener noreferrer">{publication.title} ↗</a>
+              <span class="item-sub">{publication.meta}</span>
+            </div>
+          </div>
+          <div class="about-col">
+            <h3 class="mono label">CVEs discovered</h3>
+            <ul class="cves">
+              {
+                cves.ids.map((id) => (
+                  <li>
+                    <a class="mono" href={`https://nvd.nist.gov/vuln/detail/${id}`} target="_blank" rel="noopener noreferrer">
+                      {id} ↗
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+            <span class="note">{cves.note}</span>
           </div>
         </div>
-        <div class="flex justify-center">
-          <img 
-            src="/images/gaetano.jpg" 
-            alt="Portrait of Gaetano Coppoletta" 
-            class="portrait w-64 h-64 object-cover"
-            width="256"
-            height="256"
-          />
+
+        <div class="toolkit">
+          <h3 class="mono label">Toolkit</h3>
+          <div class="toolkit-grid">
+            {
+              toolkit.map((t) => (
+                <div>
+                  <span class="toolkit-group">{t.group}</span>
+                  <span class="toolkit-items">{t.items}</span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact" class="foot">
+    <div class="wrap foot-inner">
+      <div class="foot-main">
+        <span class="mono label">Let’s build something</span>
+        <a class="foot-mail" href={`mailto:${person.email}`} data-copy-email={person.email} data-cursor="Copy">
+          {person.email.split('@')[0]}<em class="serif">@{person.email.split('@')[1]}</em>
+        </a>
+      </div>
+      <div class="foot-bar">
+        <span>© {year} {person.name}</span>
+        <div class="foot-links">
+          <a href={person.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+          <a href={person.resume} target="_blank" rel="noopener">Resume (PDF) ↗</a>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- Terminal Strip -->
-  <section class="section bg-surface border-y border-stroke">
-    <div class="container">
-      <Terminal 
-        lines={[
-          'whoami',
-          'echo "Gaetano Coppoletta - Software Developer"',
-          'ls -la ~/projects/',
-          'cat ~/.bashrc | grep -i "security"',
-          'ps aux | grep -i "ocpp"'
-        ]}
-        prefix="$"
-        loop={true}
-      />
-    </div>
-  </section>
-
-  <!-- Highlights Section -->
-  <section class="section">
-    <div class="container">
-      <SectionHeading 
-        eyebrow="Recent Work"
-        title="Security Research & Development"
-        subtitle="Tools and platforms I've built to improve cybersecurity practices"
-      />
-      
-      <div class="space-y-8">
-        <!-- Oracle Job Card -->
-        <Card>
-          <h3 class="text-accent mb-3">Oracle - Software Developer, Global Product Security</h3>
-          <p class="text-muted mb-4">
-            Currently working as a Software Developer in Oracle's Global Product Security team, where I focus on 
-            building security automation tools and vulnerability intelligence platforms. 
-            I build AI tools to automate vulnerability management processes, improving the efficiency 
-            and accuracy of security assessments.
-          </p>
-          <div class="flex flex-wrap gap-2 mb-4">
-            <SkillBadge skill="AI/ML" />
-            <SkillBadge skill="CVSS Scoring" />
-            <SkillBadge skill="Security Automation" />
-            <SkillBadge skill="Vulnerability Research" />
-            <SkillBadge skill="Product Security" />
-            <SkillBadge skill="Enterprise Security" />
-            <SkillBadge skill="Security Tools" />
-            <SkillBadge skill="Threat Intelligence" />
-          </div>
-          <div class="space-y-2 text-sm">
-            <p><strong>Role:</strong> Software Developer, Global Product Security</p>
-            <p><strong>Duration:</strong> February 2025 - Present</p>
-            <p><strong>Focus:</strong> AI-powered security automation, CVSS scoring automation, and vulnerability management platforms</p>
-            <p><strong>Impact:</strong> Contributing to Oracle's comprehensive security posture and product protection through intelligent automation</p>
-          </div>
-        </Card>
-
-        <!-- OCPPStorm Project Card -->
-        <Card>
-          <h3 class="text-accent mb-3">OCPPStorm: A Comprehensive Fuzzing Tool for OCPP Implementations</h3>
-          <p class="text-muted mb-4">
-            A comprehensive black box fuzzing tool that identified multiple critical vulnerabilities in OCPP implementations, 
-            leading to the discovery of CVEs and improved security for electric vehicle charging infrastructure. 
-            The tool employs multiple fuzzing strategies including Random Fuzzer, State Machine Fuzzer, and Isla Fuzzer.
-          </p>
-          <div class="flex flex-wrap gap-2 mb-4">
-            <SkillBadge skill="Python" />
-            <SkillBadge skill="Fuzzing" />
-            <SkillBadge skill="OCPP" />
-            <SkillBadge skill="CVE" />
-            <SkillBadge skill="Research" />
-            <SkillBadge skill="Protocol Security" />
-          </div>
-          <div class="space-y-2 text-sm">
-            <p><strong>Results:</strong> 6 CVEs discovered and assigned</p>
-            <p><strong>Publication:</strong> Network and Distributed System Security (VehicleSec) 2024 - NDSS Symposium</p>
-            <p><strong>Impact:</strong> Improved security of electric vehicle charging infrastructure. All the CVEs were addressed and fixed by the OCPP implementers.</p>
-          </div>
-          <a href="/projects/" class="text-accent hover:text-text transition-colors">Learn more →</a>
-        </Card>
-      </div>
-    </div>
-  </section>
+  </footer>
 </Layout>

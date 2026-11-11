@@ -1,116 +1,190 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
-import Terminal from '../components/Terminal.astro';
-import SectionHeading from '../components/SectionHeading.astro';
-import Card from '../components/Card.astro';
-import SkillBadge from '../components/SkillBadge.astro';
+import portrait from '../assets/gaetano-portrait.jpg';
+import { person, facts, about, experience, research, education, skills } from '../data/profile';
+
+const sections = [
+  { id: 'about', label: 'About' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'research', label: 'Research' },
+  { id: 'education', label: 'Education' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'contact', label: 'Contact' },
+];
 ---
 
-<Layout title="Gaetano Coppoletta - Software Developer focused on cybersecurity, building security automation and vulnerability intelligence tools.">
-  <!-- Hero Section -->
-  <section class="section">
-    <div class="container">
-      <div class="grid-2 items-center">
-        <div>
-          <div class="eyebrow">Software Developer · Cybersecurity</div>
-          <h1 class="mb-4">I design and build security automation and vulnerability intelligence tools. </h1>
-         
-          <div class="flex flex-wrap gap-4">
-            <a href="/about/" class="btn">About me</a>
-            <a href="/projects/" class="btn btn-secondary">Projects</a>
+<Layout title={`${person.name}, Software Engineer`} description={person.description}>
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="brand" href="#main">{person.name}</a>
+      <nav class="nav" aria-label="Sections">
+        {sections.map((s) => <a href={`#${s.id}`}>{s.label}</a>)}
+      </nav>
+      <a class="btn" href={person.resume} download>Download résumé</a>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="hero">
+      <h1>{person.name}</h1>
+      <div class="hero-grid">
+        <div class="hero-text">
+          <p class="role">{person.role}</p>
+          <p class="summary" set:html={person.summary} />
+          <div class="cta">
+            <a class="btn" href={person.resume} download>Download résumé</a>
+            <a href={person.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href={person.github} target="_blank" rel="noopener noreferrer">GitHub</a>
           </div>
         </div>
-        <div class="flex justify-center">
-          <img 
-            src="/images/gaetano.jpg" 
-            alt="Portrait of Gaetano Coppoletta" 
-            class="portrait w-64 h-64 object-cover"
-            width="256"
-            height="256"
-          />
+        <Image
+          class="hero-photo"
+          src={portrait}
+          alt={`Portrait of ${person.name}`}
+          widths={[200, 320, 400, 640]}
+          sizes="(max-width: 720px) 200px, 320px"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+      <dl class="facts">
+        {
+          facts.map((f) => (
+            <div>
+              <dt>{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="sec" id="about">
+      <h2>About</h2>
+      <div class="body prose" data-reveal>
+        {about.map((p) => <p set:html={p} />)}
+      </div>
+    </section>
+
+    <section class="sec" id="experience">
+      <h2>Experience</h2>
+      <div class="body">
+        {
+          experience.map((job) => (
+            <article class="row" data-reveal>
+              <div class="meta">
+                {job.dates}
+                <br />
+                {job.place}
+              </div>
+              <div class="main">
+                <h3>{job.title}</h3>
+                <p class="org">{job.org}</p>
+                <ul class="pts">
+                  {job.points.map((pt) => <li set:html={pt} />)}
+                </ul>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="sec" id="research">
+      <h2>Research</h2>
+      <div class="body">
+        <article class="row" data-reveal>
+          <div class="meta">
+            {research.meta.map((m, i) => (
+              <>
+                {i > 0 && <br />}
+                {m}
+              </>
+            ))}
+          </div>
+          <div class="main">
+            <h3>{research.title}</h3>
+            {research.paragraphs.map((p) => <p>{p}</p>)}
+            <ul class="cves" aria-label="CVEs discovered">
+              {
+                research.cves.map((c) => (
+                  <li>
+                    <a
+                      href={`https://nvd.nist.gov/vuln/detail/${c}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${c} on the National Vulnerability Database`}
+                    >
+                      {c}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+            <p>
+              <a href={research.paper} target="_blank" rel="noopener noreferrer">Read the paper (PDF)</a>
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="sec" id="education">
+      <h2>Education</h2>
+      <div class="body">
+        {
+          education.map((e) => (
+            <article class="row" data-reveal>
+              <div class="meta">
+                {e.dates}
+                <br />
+                {e.place}
+              </div>
+              <div class="main">
+                <h3>{e.degree}</h3>
+                <p class="org">{e.school}</p>
+                {e.note && <p class="note">{e.note}</p>}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="sec" id="skills">
+      <h2>Skills</h2>
+      <div class="body skills">
+        {
+          skills.map((s) => (
+            <div class="row" data-reveal>
+              <div class="meta">{s.group}</div>
+              <div class="main">
+                <p>{s.items}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="sec" id="contact">
+      <h2>Contact</h2>
+      <div class="body" data-reveal>
+        <p class="mail"><a href={`mailto:${person.email}`}>{person.email}</a></p>
+        <div class="links">
+          <a class="btn" href={person.resume} download>Download résumé</a>
+          <a href={person.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href={person.github} target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <!-- Terminal Strip -->
-  <section class="section bg-surface border-y border-stroke">
-    <div class="container">
-      <Terminal 
-        lines={[
-          'whoami',
-          'echo "Gaetano Coppoletta - Software Developer"',
-          'ls -la ~/projects/',
-          'cat ~/.bashrc | grep -i "security"',
-          'ps aux | grep -i "ocpp"'
-        ]}
-        prefix="$"
-        loop={true}
-      />
+  <footer class="wrap">
+    <div class="foot">
+      <span>{person.name}</span>
+      <span>{person.location}</span>
     </div>
-  </section>
-
-  <!-- Highlights Section -->
-  <section class="section">
-    <div class="container">
-      <SectionHeading 
-        eyebrow="Recent Work"
-        title="Security Research & Development"
-        subtitle="Tools and platforms I've built to improve cybersecurity practices"
-      />
-      
-      <div class="space-y-8">
-        <!-- Oracle Job Card -->
-        <Card>
-          <h3 class="text-accent mb-3">Oracle - Software Developer, Global Product Security</h3>
-          <p class="text-muted mb-4">
-            Currently working as a Software Developer in Oracle's Global Product Security team, where I focus on 
-            building security automation tools and vulnerability intelligence platforms. 
-            I build AI tools to automate vulnerability management processes, improving the efficiency 
-            and accuracy of security assessments.
-          </p>
-          <div class="flex flex-wrap gap-2 mb-4">
-            <SkillBadge skill="AI/ML" />
-            <SkillBadge skill="CVSS Scoring" />
-            <SkillBadge skill="Security Automation" />
-            <SkillBadge skill="Vulnerability Research" />
-            <SkillBadge skill="Product Security" />
-            <SkillBadge skill="Enterprise Security" />
-            <SkillBadge skill="Security Tools" />
-            <SkillBadge skill="Threat Intelligence" />
-          </div>
-          <div class="space-y-2 text-sm">
-            <p><strong>Role:</strong> Software Developer, Global Product Security</p>
-            <p><strong>Duration:</strong> February 2025 - Present</p>
-            <p><strong>Focus:</strong> AI-powered security automation, CVSS scoring automation, and vulnerability management platforms</p>
-            <p><strong>Impact:</strong> Contributing to Oracle's comprehensive security posture and product protection through intelligent automation</p>
-          </div>
-        </Card>
-
-        <!-- OCPPStorm Project Card -->
-        <Card>
-          <h3 class="text-accent mb-3">OCPPStorm: A Comprehensive Fuzzing Tool for OCPP Implementations</h3>
-          <p class="text-muted mb-4">
-            A comprehensive black box fuzzing tool that identified multiple critical vulnerabilities in OCPP implementations, 
-            leading to the discovery of CVEs and improved security for electric vehicle charging infrastructure. 
-            The tool employs multiple fuzzing strategies including Random Fuzzer, State Machine Fuzzer, and Isla Fuzzer.
-          </p>
-          <div class="flex flex-wrap gap-2 mb-4">
-            <SkillBadge skill="Python" />
-            <SkillBadge skill="Fuzzing" />
-            <SkillBadge skill="OCPP" />
-            <SkillBadge skill="CVE" />
-            <SkillBadge skill="Research" />
-            <SkillBadge skill="Protocol Security" />
-          </div>
-          <div class="space-y-2 text-sm">
-            <p><strong>Results:</strong> 6 CVEs discovered and assigned</p>
-            <p><strong>Publication:</strong> Network and Distributed System Security (VehicleSec) 2024 - NDSS Symposium</p>
-            <p><strong>Impact:</strong> Improved security of electric vehicle charging infrastructure. All the CVEs were addressed and fixed by the OCPP implementers.</p>
-          </div>
-          <a href="/projects/" class="text-accent hover:text-text transition-colors">Learn more →</a>
-        </Card>
-      </div>
-    </div>
-  </section>
+  </footer>
 </Layout>
